@@ -1,0 +1,94 @@
+<div class="admin-container">
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+  
+    <div class="admin-content">
+        <div class="page-header">
+            <button class="back-btn" (click)="goBack()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Dashboard
+            </button>
+            <h1 class="page-title relative top-4">📝 Mentor Applications</h1>
+            <p class="page-subtitle relative top-4">Review requests from students who want to become mentors</p>
+        </div>
+
+        <div class="info-card mt-8">
+            <h2 class="card-title">Pending Applications</h2>
+            
+            <div *ngIf="isLoading" class="flex justify-center p-8">
+                <div class="spinner"></div>
+            </div>
+
+            <div *ngIf="!isLoading && applications.length === 0" class="text-center p-8 text-gray-400">
+                No mentor applications found.
+            </div>
+
+            <div *ngIf="!isLoading && applications.length > 0" class="overflow-x-auto mt-4">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-700">
+                            <th class="p-3 text-gray-300">Student Name</th>
+                            <th class="p-3 text-gray-300">Email</th>
+                            <th class="p-3 text-gray-300">Reason</th>
+                            <th class="p-3 text-gray-300">Resume Link</th>
+                            <th class="p-3 text-gray-300">Date Applied</th>
+                            <th class="p-3 text-gray-300">Status</th>
+                            <th class="p-3 text-gray-300">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let app of applications" class="border-b border-gray-800 hover:bg-gray-800 transition-colors">
+                            <td class="p-3">
+                                <a [routerLink]="['/profile', app.user.id]" class="text-cyan-400 hover:text-cyan-300 transition-colors font-medium">
+                                    {{ app.user.name }}
+                                </a>
+                            </td>
+                            <td class="p-3">
+                                <a [href]="'mailto:' + app.user.email" class="text-indigo-400 hover:text-indigo-300 transition-colors">
+                                    {{ app.user.email }}
+                                </a>
+                            </td>
+                            <td class="p-3 max-w-xs truncate" title="{{ app.reason }}">{{ app.reason }}</td>
+                            <td class="p-3">
+                                <a *ngIf="app.resumeUrl" [href]="app.resumeUrl" target="_blank" class="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                    View Resume
+                                </a>
+                                <span *ngIf="!app.resumeUrl" class="text-gray-500 text-sm">Not provided</span>
+                            </td>
+                            <td class="p-3">{{ app.createdAt | date:'shortDate' }}</td>
+                            <td class="p-3">
+                                <span class="px-2 py-1 rounded text-xs font-semibold"
+                                      [ngClass]="{
+                                          'bg-yellow-500/20 text-yellow-400': app.status === 'PENDING',
+                                          'bg-green-500/20 text-green-400': app.status === 'APPROVED',
+                                          'bg-red-500/20 text-red-400': app.status === 'REJECTED'
+                                      }">
+                                    {{ app.status }}
+                                </span>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex gap-2" *ngIf="app.status === 'PENDING'">
+                                    <button class="bg-green-600 hover:bg-green-500 text-white px-3 py-1 rounded text-sm transition"
+                                            (click)="reviewApplication(app.id, 'APPROVED')">
+                                        Approve
+                                    </button>
+                                    <button class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-sm transition"
+                                            (click)="reviewApplication(app.id, 'REJECTED')">
+                                        Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+// ============================================
+// PROFILE PAGE - Unified Theme
+// ============================================
+
+// Import shared theme variables
+@use '../../../../styles/theme' as theme;
+
+// Variables and Mixins
+$glass-bg: theme.$glass-bg;
+$glass-border: theme.$glass-border;
+$glass-highlight: theme.$glass-highlight;
+$blur-amt: 24px;
+
+@mixin glass-panel {
+  background: $glass-bg;
+  backdrop-filter: blur($blur-amt);
+  -webkit-backdrop-filter: blur($blur-amt);
+  border: 1px solid $glass-border;
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+}
+
+@mixin hover-glow {
+  transition: all 0.3s theme.$transition-smooth;
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.3), 
+                0 0 15px rgba(theme.$accent-primary, 0.2);
+  }
+}
+
+// Global Layout Overrides
+:host {
+  display: block;
+  min-height: calc(100vh - 64px);
+  background: theme.$bg-primary;
+}
+
+// Custom Scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 100vh;
+  &:hover { background: rgba(255, 255, 255, 0.2); }
+}
+
+// Animations
+@keyframes blob-float {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.animate-blob {
+  animation: blob-float 10s infinite;
+}
+
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+// Component Styles
+.bento-card {
+  @include glass-panel;
+  @include hover-glow;
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+.input-glass {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.2s;
+  
+  &:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: #818cf8;
+    box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+// Role Badge Gradients
+.badge-ADMIN { @apply bg-gradient-to-r from-red-500/20 to-orange-500/20 text-red-300 border-red-500/30; }
+.badge-MENTOR { @apply bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 border-purple-500/30; }
+.badge-STUDENT { @apply bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 border-cyan-500/30; }
+
+// Timeline Connector Gradient
+.timeline-line {
+  background: linear-gradient(to bottom, #6366f1 0%, rgba(99, 102, 241, 0.2) 100%);
+}

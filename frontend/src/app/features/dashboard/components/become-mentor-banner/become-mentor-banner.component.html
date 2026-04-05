@@ -1,0 +1,197 @@
+<div class="banner-container h-[80%] relative overflow-hidden group rounded-[3rem] bg-slate-900/50 border border-slate-700/50 backdrop-blur-xl">
+  <!-- Frameless - No background/borders to blend seamlessly into dashboard -->
+  
+  <!-- Carousel Slides -->
+  <div class="slides-wrapper h-full w-full relative z-10 flex transition-transform duration-700 ease-in-out"
+       [style.transform]="'translateX(' + (-currentSlide * 100) + '%)'">
+    
+    <!-- Slide 1 -->
+    <div class="slide min-w-full h-full flex items-center justify-between p-4 lg:p-8 gap-8">
+      <div class="text-content flex-1 max-w-lg z-20">
+        <span class="inline-block px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-bold tracking-wider uppercase mb-4 border border-cyan-500/30">
+          Impact
+        </span>
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-white leading-tight">
+          Share Your <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">Experience</span>
+        </h2>
+        <p class="text-gray-400 text-base leading-relaxed mb-6">
+          Become a mentor and help other students navigate their career paths. Your journey can be their guide.
+        </p>
+        <button class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2.5 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transform hover:-translate-y-0.5"
+                (click)="onApplyClick()">
+          Apply Now
+        </button>
+      </div>
+      <div class="image-content hidden md:flex flex-1 h-full relative items-center justify-center">
+        <!-- Decorative glowing orb behind image -->
+        <div class="absolute w-48 h-48 bg-cyan-500/30 rounded-full blur-[80px]"></div>
+        <!-- Inline SVG Illustration -->
+        <svg class="w-full max-w-xs h-auto relative z-10 drop-shadow-2xl translate-y-[-10px] transform hover:translate-y-[-15px] transition-transform duration-500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="250" cy="250" r="150" fill="url(#paint0_linear_1)"/>
+          <path d="M150 250l60 60 140-140" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="180" y="360" width="140" height="20" rx="10" fill="white" fill-opacity="0.5"/>
+          <rect x="220" y="400" width="60" height="20" rx="10" fill="white" fill-opacity="0.3"/>
+          <defs>
+            <linearGradient id="paint0_linear_1" x1="100" y1="100" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#22D3EE" />
+              <stop offset="1" stop-color="#3B82F6" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide min-w-full h-full flex items-center justify-between p-4 lg:p-8 gap-8">
+      <div class="text-content flex-1 max-w-lg z-20">
+        <span class="inline-block px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold tracking-wider uppercase mb-4 border border-red-500/30">
+          Pro Tip
+        </span>
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-white leading-tight">
+          Nail Your <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-orange-400">Interviews</span>
+        </h2>
+        <p class="text-gray-400 text-base leading-relaxed mb-6">
+          Use the AI Career Assistant to practice mock interviews. Get real-time feedback on your responses and build confidence for the real thing.
+        </p>
+        <button class="bg-red-600 hover:bg-red-500 text-white font-medium py-2.5 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] transform hover:-translate-y-0.5"
+                (click)="navigateTo('/chat')">
+          Practice Now
+        </button>
+      </div>
+      <div class="image-content hidden md:flex flex-1 h-full relative items-center justify-center">
+        <!-- Decorative glowing orb behind image -->
+        <div class="absolute w-48 h-48 bg-red-500/30 rounded-full blur-[80px]"></div>
+        <!-- Inline SVG Illustration -->
+        <svg class="w-full max-w-xs h-auto relative z-10 drop-shadow-2xl translate-y-[-10px] transform hover:translate-y-[-15px] transition-transform duration-500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="150" y="150" width="200" height="200" rx="40" fill="url(#paint1_linear_1)" transform="rotate(15 250 250)"/>
+          <path d="M220 200v100l80-50-80-50z" fill="white"/>
+          <circle cx="350" cy="150" r="30" fill="#FBBF24"/>
+          <defs>
+            <linearGradient id="paint1_linear_1" x1="150" y1="150" x2="350" y2="350" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#F87171" />
+              <stop offset="1" stop-color="#EA580C" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-48 h-48 bg-red-500/20 rounded-full blur-[80px]"></div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide min-w-full h-full flex items-center p-4 lg:p-8 gap-6">
+      <div class="text-content flex-1 max-w-lg z-20">
+        <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold tracking-wider uppercase mb-4 border border-emerald-500/30">
+          Best Practices
+        </span>
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-green-400">
+          Stand Out to Mentors
+        </h2>
+        <p class="text-gray-400 text-base leading-relaxed mb-6">
+          A fully completed profile with clear career goals increases your chances of having a session request accepted by a senior mentor. Let them know what you want to achieve!
+        </p>
+        <button class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transform hover:-translate-y-0.5"
+                (click)="navigateTo('/profile')">
+          Update Profile
+        </button>
+      </div>
+      <div class="image-content hidden md:flex flex-1 h-full relative items-center justify-center">
+        <!-- Decorative glowing orb behind image -->
+        <div class="absolute w-48 h-48 bg-emerald-500/30 rounded-full blur-[80px]"></div>
+        <!-- Inline SVG Illustration -->
+        <svg class="w-full max-w-xs h-auto relative z-10 drop-shadow-2xl translate-y-[-10px] transform hover:translate-y-[-15px] transition-transform duration-500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="250" cy="250" r="150" fill="url(#paint2_linear_1)"/>
+          <path d="M200 250h100M250 200v100" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="paint2_linear_1" x1="100" y1="100" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#34D399" />
+              <stop offset="1" stop-color="#059669" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-48 h-48 bg-emerald-500/20 rounded-full blur-[80px]"></div>
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide min-w-full h-full flex items-center p-4 lg:p-8 gap-6">
+      <div class="text-content flex-1 max-w-lg z-20">
+        <span class="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold tracking-wider uppercase mb-4 border border-blue-500/30">
+          Guidance
+        </span>
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">
+          Find Your Perfect Mentor
+        </h2>
+        <p class="text-gray-400 text-base leading-relaxed mb-6">
+          Browse through our list of experienced industry professionals. Connect with those who align with your goals and schedule one-on-one sessions.
+        </p>
+        <button class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transform hover:-translate-y-0.5"
+                (click)="navigateTo('/mentorship')">
+          Browse Mentors
+        </button>
+      </div>
+      <div class="image-content hidden md:flex flex-1 h-full relative items-center justify-center">
+        <!-- Decorative glowing orb behind image -->
+        <div class="absolute w-48 h-48 bg-blue-500/30 rounded-full blur-[80px]"></div>
+        <!-- Inline SVG Illustration -->
+        <svg class="w-full max-w-xs h-auto relative z-10 drop-shadow-2xl translate-y-[-10px] transform hover:translate-y-[-15px] transition-transform duration-500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="250" cy="250" r="150" fill="url(#paint3_linear_1)"/>
+          <path d="M180 250l40 40 100-100" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="paint3_linear_1" x1="100" y1="100" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#60A5FA" />
+              <stop offset="1" stop-color="#3730A3" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-48 h-48 bg-blue-500/20 rounded-full blur-[80px]"></div>
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide min-w-full h-full flex items-center p-4 lg:p-8 gap-6">
+      <div class="text-content flex-1 max-w-lg z-20">
+        <span class="inline-block px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-xs font-bold tracking-wider uppercase mb-4 border border-pink-500/30">
+          Consistency
+        </span>
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-rose-400">
+          Track Your Progress
+        </h2>
+        <p class="text-gray-400 text-base leading-relaxed mb-6">
+          Set clear milestones in your professional journey. Regularly updating your profile and engaging with mentors ensures you stay on the path to success.
+        </p>
+        <button class="bg-pink-600 hover:bg-pink-500 text-white font-medium py-2.5 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.5)] transform hover:-translate-y-0.5"
+                (click)="navigateTo('/profile')">
+          View Milestones
+        </button>
+      </div>
+      <div class="image-content hidden md:flex flex-1 h-full relative items-center justify-center">
+        <!-- Decorative glowing orb behind image -->
+        <div class="absolute w-48 h-48 bg-pink-500/30 rounded-full blur-[80px]"></div>
+        <!-- Inline SVG Illustration -->
+        <svg class="w-full max-w-xs h-auto relative z-10 drop-shadow-2xl translate-y-[-10px] transform hover:translate-y-[-15px] transition-transform duration-500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="250" cy="250" r="150" fill="url(#paint4_linear_1)"/>
+          <path d="M150 250h200v-50h-200M200 200v100" stroke="white" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="paint4_linear_1" x1="100" y1="100" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#F472B6" />
+              <stop offset="1" stop-color="#BE123C" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-48 h-48 bg-pink-500/20 rounded-full blur-[80px]"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Dots -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+    <button *ngFor="let dot of [0, 1, 2, 3, 4]; let i = index" 
+            (click)="setSlide(i)"
+            class="w-2 h-2 rounded-full transition-all duration-300"
+            [class.bg-white]="currentSlide === i"
+            [class.w-6]="currentSlide === i"
+            [class.bg-white_30]="currentSlide !== i"
+            [class.hover:bg-white_50]="currentSlide !== i">
+    </button>
+  </div>
+</div>

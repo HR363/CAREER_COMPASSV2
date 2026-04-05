@@ -1,0 +1,58 @@
+<div class="admin-container">
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+  
+    <div class="admin-content">
+        <div class="page-header flex justify-between items-center bg-gray-900 border border-gray-800 p-4 rounded-xl shadow-lg relative z-10 w-full mb-8 mt-2">
+            <div>
+                <h1 class="page-title text-xl flex items-center">
+                    <span class="mr-2 text-purple-500">👻</span> 
+                    Ghost Mode Observation
+                </h1>
+                <p class="text-sm text-gray-400">Silently monitoring session: {{ sessionId }}</p>
+            </div>
+            
+            <button class="bg-red-600 hover:bg-red-500 flex text-white font-medium items-center px-4 py-2 rounded-lg transition shadow-md"
+                    (click)="leaveGhostMode()">
+               <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+               </svg>
+               Exit Session
+            </button>
+        </div>
+
+        <div *ngIf="isLoading" class="flex justify-center p-8">
+            <div class="spinner"></div>
+        </div>
+
+        <div *ngIf="error" class="bg-red-900/30 border border-red-500/50 p-4 rounded-xl text-red-200 mt-4">
+            {{ error }}
+        </div>
+
+        <div *ngIf="isJoined && !isLoading" class="video-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let user of remoteUsers" class="video-container relative rounded-xl overflow-hidden aspect-video border border-gray-800 shadow-xl bg-gray-950">
+                <div [id]="'video-ghost-' + user.uid" class="w-full h-full object-cover">
+                    <!-- Agora Player Mount Point for the remote Track -->
+                    <div *ngIf="!user.videoTrack" class="flex h-full w-full justify-center items-center font-semibold text-gray-600 text-lg">
+                        <i class="fas fa-video-slash block mb-2 mr-2"></i> User Camera Off
+                    </div>
+                </div>
+                
+                <div class="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg flex items-center shadow-lg border border-white/5">
+                    <span class="w-2 h-2 rounded-full mr-2"
+                        [ngClass]="user.audioTrack ? 'bg-green-400' : 'bg-red-400'"></span>
+                    <span class="font-medium text-white truncate max-w-[120px]">{{ user.uid }}</span>
+                </div>
+            </div>
+
+            <div *ngIf="remoteUsers.length === 0" class="col-span-full text-center p-12 text-gray-500 bg-gray-900/20 border border-gray-800 rounded-xl border-dashed">
+                <p class="text-lg">Waiting for participants to join the session and publish streams...</p>
+                <div class="mt-4 flex justify-center space-x-1 flex-row flex-nowrap" style="scale: 30%">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

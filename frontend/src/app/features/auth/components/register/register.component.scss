@@ -1,0 +1,276 @@
+// ============================================
+// REGISTER PAGE - Unified Theme
+// ============================================
+
+// Import shared theme variables
+@use '../../../../styles/theme' as theme;
+
+// Local variables using theme
+$bg-primary: theme.$bg-primary;
+$accent-primary: theme.$accent-primary;
+$accent-secondary: theme.$accent-secondary;
+$glass-bg: theme.$glass-bg;
+$glass-border: theme.$glass-border;
+
+.auth-container {
+  min-height: calc(100vh - 64px); // Account for navbar
+  background: $bg-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+// Animated Background
+.animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    animation: float 20s ease-in-out infinite;
+
+    &.orb-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba($accent-primary, 0.4) 0%, transparent 70%);
+      top: -100px;
+      left: -100px;
+    }
+
+    &.orb-2 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba($accent-secondary, 0.3) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: 10s;
+    }
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -30px) scale(1.1); }
+}
+
+.auth-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 450px;
+  padding: 2rem;
+}
+
+.auth-card {
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  border-radius: 2rem;
+  padding: 3rem;
+  transition: all 0.4s theme.$transition-smooth;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+    border-color: rgba($accent-primary, 0.2);
+  }
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+
+  .logo {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 20px rgba($accent-primary, 0.5));
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  p {
+    font-size: 1rem;
+    color: theme.$text-secondary;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.auth-form {
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: theme.$text-primary;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: theme.$bg-secondary;
+      border: 1px solid $glass-border;
+      border-radius: 1rem;
+      color: #ffffff;
+      font-size: 1rem;
+      transition: all 0.3s theme.$transition-smooth;
+
+      &::placeholder {
+        color: theme.$text-muted;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: rgba($accent-primary, 0.4);
+        box-shadow: 0 0 20px rgba($accent-primary, 0.15);
+      }
+
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.5)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1.25rem;
+      padding-right: 2.5rem;
+      background-color: theme.$bg-secondary;
+    }
+
+    .error-message {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: theme.$accent-danger;
+    }
+  }
+
+  .alert-error {
+    padding: 1rem;
+    background: rgba(theme.$accent-danger, 0.1);
+    border: 1px solid rgba(theme.$accent-danger, 0.2);
+    border-radius: 1rem;
+    color: #fca5a5;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, $accent-primary 0%, $accent-secondary 100%);
+    border: none;
+    border-radius: 1rem;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s theme.$transition-smooth;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba($accent-primary, 0.3);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba($accent-primary, 0.4);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-footer {
+  margin-top: 2rem;
+  text-align: center;
+
+  p {
+    color: theme.$text-secondary;
+    font-size: 0.875rem;
+
+    a {
+      color: theme.$accent-light;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $accent-secondary;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .auth-content {
+    padding: 1rem;
+  }
+
+  .auth-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-header {
+    .logo {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+}

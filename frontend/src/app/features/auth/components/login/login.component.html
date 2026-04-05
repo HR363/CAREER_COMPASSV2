@@ -1,0 +1,73 @@
+<div class="auth-container">
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+
+  <div class="auth-content">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">🧭</div>
+        <h2>Sign in to CareerCompass AI</h2>
+        <p>Access your personalized career guidance platform</p>
+      </div>
+      
+      <form class="auth-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="Enter your email"
+            formControlName="email"
+          />
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" 
+               class="error-message">
+            Please enter a valid email address
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            placeholder="Enter your password"
+            formControlName="password"
+          />
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" 
+               class="error-message">
+            Password is required
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert-error">
+          {{ errorMessage }}
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid || isLoading"
+          class="btn-primary"
+        >
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ isLoading ? 'Signing in...' : 'Sign in' }}
+        </button>
+
+        <div class="auth-footer">
+          <p>
+            Don't have an account?
+            <a routerLink="/auth/register">Sign up here</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

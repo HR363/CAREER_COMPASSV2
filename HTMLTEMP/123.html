@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Compass — Navigate the Infinite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyan: {
+                            50: '#ecfeff', 100: '#cffafe', 200: '#a5f3fc',
+                            300: '#67e8f9', 400: '#22d3ee', 450: '#06b6d4',
+                            500: '#06b6d4', 600: '#0891b2', 700: '#0e7490',
+                            800: '#155e75', 900: '#164e63', 950: '#083344',
+                        },
+                        slate: { 850: '#0f172a', 900: '#020617', 950: '#01040f' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #01040f;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-dot {
+            width: 5px;
+            height: 5px;
+            background-color: #06b6d4;
+        }
+
+        .cursor-outline {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(6, 182, 212, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        body:hover .cursor-outline {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(6, 182, 212, 0.05);
+            border-color: rgba(6, 182, 212, 0.8);
+        }
+
+        /* Film Grain */
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Aurora Background */
+        .aurora {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(8, 145, 178, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 70%);
+            animation: aurora 20s ease-in-out infinite;
+        }
+
+        @keyframes aurora {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Glass Morphism */
+        .glass {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(6, 182, 212, 0.1);
+        }
+
+        .glass-hover:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        /* Constellation Lines */
+        .constellation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        /* Holographic Card */
+        .holo-card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(15, 23, 42, 0.8));
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .holo-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 40%, rgba(6, 182, 212, 0.2) 45%, rgba(34, 211, 238, 0.4) 50%, rgba(6, 182, 212, 0.2) 55%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        .holo-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        /* Text Scramble Effect */
+        .scramble-text {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Skill Tree Node */
+        .skill-node {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .skill-node::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(45deg, transparent, #06b6d4, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .skill-node:hover::after {
+            opacity: 1;
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.8), transparent);
+            filter: blur(40px);
+            animation: float 10s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stagger Grid */
+        .stagger-grid > * {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stagger-grid.active > * {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stagger-grid.active > *:nth-child(1) { transition-delay: 0.1s; }
+        .stagger-grid.active > *:nth-child(2) { transition-delay: 0.2s; }
+        .stagger-grid.active > *:nth-child(3) { transition-delay: 0.3s; }
+        .stagger-grid.active > *:nth-child(4) { transition-delay: 0.4s; }
+        .stagger-grid.active > *:nth-child(5) { transition-delay: 0.5s; }
+        .stagger-grid.active > *:nth-child(6) { transition-delay: 0.6s; }
+
+        /* Neon Glow */
+        .neon-text {
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5), 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Timeline */
+        .timeline-line {
+            background: linear-gradient(to bottom, transparent, #06b6d4, transparent);
+        }
+
+        /* Interactive Map */
+        .career-map {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .map-node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #06b6d4;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.8);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .map-node:hover {
+            transform: scale(2);
+            box-shadow: 0 0 40px rgba(6, 182, 212, 1);
+        }
+
+        .map-connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.5), transparent);
+            transform-origin: left center;
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 2s infinite;
+            color: #06b6d4;
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-2 2s infinite;
+            color: #0891b2;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); }
+            40% { clip-path: inset(50% 0 20% 0); transform: translate(2px, -2px); }
+            60% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 0); }
+            80% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 2px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+            40% { clip-path: inset(30% 0 40% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(10% 0 80% 0); transform: translate(2px, 0); }
+            80% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, -2px); }
+        }
+
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #01040f; }
+        ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0891b2; }
+
+        /* Loading Animation */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #06b6d4;
+            border-radius: 50%;
+            position: relative;
+            animation: rotate 1s linear infinite;
+        }
+
+        .loader::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: #0891b2;
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500/30 selection:text-cyan-50">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Effects -->
+    <div class="grain"></div>
+    <div class="aurora"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-500" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3 group cursor-pointer magnetic">
+                    <div class="relative w-10 h-10">
+                        <div class="absolute inset-0 bg-cyan-500/20 rotate-45 transform group-hover:rotate-90 transition-transform duration-700"></div>
+                        <div class="absolute inset-0 border border-cyan-500/50 rotate-45 transform group-hover:rotate-0 transition-transform duration-700"></div>
+                        <i data-lucide="compass" class="absolute inset-0 m-auto w-5 h-5 text-cyan-400"></i>
+                    </div>
+                    <span class="font-display font-bold text-xl tracking-tight text-slate-100">
+                        Career<span class="text-cyan-400">Compass</span>
+                    </span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#constellation" class="text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors magnetic">Constellation</a>
+                    <a href="#ecosystem" class="text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors magnetic">Ecosystem</a>
+                    <a href="#simulation" class="text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors magnetic">Simulation</a>
+                    <a href="#manifesto" class="text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors magnetic">Manifesto</a>
+                </div>
+
+                <button class="glass px-6 py-2.5 rounded-full text-sm font-semibold text-cyan-400 border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/10 transition-all magnetic">
+                    Initialize
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Floating Orbs -->
+        <div class="orb w-96 h-96 top-20 -left-48 opacity-30"></div>
+        <div class="orb w-64 h-64 bottom-20 right-10 opacity-20" style="animation-delay: -5s;"></div>
+
+        <!-- Constellation Canvas -->
+        <canvas id="constellationCanvas" class="constellation"></canvas>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <div class="mb-8 reveal">
+                <span class="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full text-xs font-mono text-cyan-400 uppercase tracking-widest border-cyan-500/20">
+                    <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+                    <span>System Online</span>
+                </span>
+            </div>
+
+            <h1 class="font-display text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-none reveal" style="transition-delay: 0.1s;">
+                <span class="block text-slate-100 glitch" data-text="NAVIGATE">NAVIGATE</span>
+                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-600 mt-2" id="scrambleTarget">THE INFINITE</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed reveal" style="transition-delay: 0.2s;">
+                Career Compass is not a tool. It is a <span class="text-cyan-400">living intelligence</span> that maps your potential, 
+                connects you with mentors across dimensions, and simulates futures before you live them.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal" style="transition-delay: 0.3s;">
+                <button class="group relative px-8 py-4 bg-cyan-500 rounded-lg overflow-hidden magnetic" onclick="enterPortal()">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <span class="relative flex items-center space-x-2 text-slate-950 font-bold">
+                        <span>Enter the Void</span>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                    </span>
+                </button>
+                <button class="glass px-8 py-4 rounded-lg text-cyan-400 font-semibold hover:border-cyan-400/50 transition-all magnetic flex items-center space-x-2">
+                    <i data-lucide="play" class="w-5 h-5"></i>
+                    <span>Observe Simulation</span>
+                </button>
+            </div>
+
+            <!-- Live Data Ticker -->
+            <div class="mt-20 glass rounded-2xl p-6 max-w-4xl mx-auto reveal" style="transition-delay: 0.4s;">
+                <div class="flex items-center justify-between text-xs font-mono text-slate-500 mb-4 uppercase tracking-widest">
+                    <span>Live Network Activity</span>
+                    <span class="flex items-center space-x-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span>Connected</span>
+                    </span>
+                </div>
+                <div class="grid grid-cols-4 gap-4 text-center" id="liveStats">
+                    <div>
+                        <div class="text-2xl font-bold text-cyan-400 font-mono" data-value="84729">0</div>
+                        <div class="text-xs text-slate-600 uppercase">Active Explorers</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-cyan-400 font-mono" data-value="1247">0</div>
+                        <div class="text-xs text-slate-600 uppercase">Mentors Online</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-cyan-400 font-mono" data-value="98.4">0</div>
+                        <div class="text-xs text-slate-600 uppercase">Path Accuracy %</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-cyan-400 font-mono" data-value="156">0</div>
+                        <div class="text-xs text-slate-600 uppercase">Industries Mapped</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="w-6 h-6 text-cyan-500/50"></i>
+        </div>
+    </section>
+
+    <!-- Career Constellation Map -->
+    <section id="constellation" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-4xl md:text-6xl font-bold mb-4 text-slate-100">
+                    The <span class="text-cyan-400">Constellation</span>
+                </h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">
+                    Every career is a star. Every connection is a bridge. 
+                    Explore the living map of professional possibilities.
+                </p>
+            </div>
+
+            <div class="career-map glass rounded-3xl border-cyan-500/20 reveal" id="careerMap">
+                <!-- Nodes will be generated by JS -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="text-center">
+                        <div class="w-24 h-24 rounded-full bg-cyan-500/20 flex items-center justify-center mx-auto mb-4 animate-pulse">
+                            <i data-lucide="user" class="w-10 h-10 text-cyan-400"></i>
+                        </div>
+                        <p class="text-cyan-400 font-mono text-sm">You Are Here</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mt-12 stagger-grid" id="pathCards">
+                <div class="glass p-6 rounded-2xl glass-hover cursor-pointer group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4 border border-cyan-500/20 group-hover:scale-110 transition-transform">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-cyan-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-200 mb-2">The Ascender</h3>
+                    <p class="text-sm text-slate-500">Rapid vertical growth through skill acquisition and strategic positioning.</p>
+                    <div class="mt-4 flex items-center text-cyan-400 text-sm font-mono">
+                        <span>82% Match</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-2xl glass-hover cursor-pointer group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4 border border-cyan-500/20 group-hover:scale-110 transition-transform">
+                        <i data-lucide="shuffle" class="w-6 h-6 text-cyan-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-200 mb-2">The Pivoter</h3>
+                    <p class="text-sm text-slate-500">Lateral movement into emerging fields with transferable expertise.</p>
+                    <div class="mt-4 flex items-center text-cyan-400 text-sm font-mono">
+                        <span>64% Match</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-2xl glass-hover cursor-pointer group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4 border border-cyan-500/20 group-hover:scale-110 transition-transform">
+                        <i data-lucide="hexagon" class="w-6 h-6 text-cyan-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-200 mb-2">The Architect</h3>
+                    <p class="text-sm text-slate-500">Build your own path. Founder mindset with systematic execution.</p>
+                    <div class="mt-4 flex items-center text-cyan-400 text-sm font-mono">
+                        <span>91% Match</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ecosystem Grid -->
+    <section id="ecosystem" class="py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-950/10 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6 text-slate-100">
+                        An Ecosystem of<br>
+                        <span class="text-cyan-400">Intelligence</span>
+                    </h2>
+                    <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                        Not just features. Living systems that breathe, learn, and evolve with you. 
+                        Each module is a neural pathway in your career brain.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4 group cursor-pointer" onclick="activateFeature(this)">
+                            <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center flex-shrink-0 border-cyan-500/20 group-hover:border-cyan-400 transition-all group-hover:shadow-lg group-hover:shadow-cyan-500/20">
+                                <i data-lucide="brain" class="w-7 h-7 text-cyan-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-lg font-bold text-slate-200 mb-1 group-hover:text-cyan-400 transition-colors">Neural Recommendations</h4>
+                                <p class="text-sm text-slate-500">AI that understands context, not just keywords. It knows your industry, your pace, your potential.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 group cursor-pointer" onclick="activateFeature(this)">
+                            <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center flex-shrink-0 border-cyan-500/20 group-hover:border-cyan-400 transition-all group-hover:shadow-lg group-hover:shadow-cyan-500/20">
+                                <i data-lucide="network" class="w-7 h-7 text-cyan-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-lg font-bold text-slate-200 mb-1 group-hover:text-cyan-400 transition-colors">Mentor Mesh</h4>
+                                <p class="text-sm text-slate-500">A distributed network of industry leaders. Not just advice—access to decision-makers.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 group cursor-pointer" onclick="activateFeature(this)">
+                            <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center flex-shrink-0 border-cyan-500/20 group-hover:border-cyan-400 transition-all group-hover:shadow-lg group-hover:shadow-cyan-500/20">
+                                <i data-lucide="git-branch" class="w-7 h-7 text-cyan-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-lg font-bold text-slate-200 mb-1 group-hover:text-cyan-400 transition-colors">Timeline Branching</h4>
+                                <p class="text-sm text-slate-500">See parallel futures. What if you learned Python? Switched industries? Started a company?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative reveal">
+                    <div class="absolute -inset-4 bg-cyan-500/20 rounded-3xl blur-3xl opacity-30"></div>
+                    <div class="relative glass rounded-3xl p-8 border-cyan-500/20">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-cyan-500 animate-pulse"></div>
+                                <span class="text-sm font-mono text-cyan-400">LIVE SIMULATION</span>
+                            </div>
+                            <span class="text-xs text-slate-500 font-mono">v2.4.1</span>
+                        </div>
+
+                        <!-- Holographic Interface -->
+                        <div class="space-y-4" id="holoInterface">
+                            <div class="holo-card rounded-xl p-4 border border-cyan-500/20 cursor-pointer" onmouseenter="tiltCard(this)" onmouseleave="resetCard(this)">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-sm font-mono text-cyan-400">SKILL_MATRIX</span>
+                                    <i data-lucide="maximize-2" class="w-4 h-4 text-slate-500"></i>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs text-slate-400">
+                                        <span>Leadership</span>
+                                        <span>84%</span>
+                                    </div>
+                                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-cyan-400 w-[84%] shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-slate-400">
+                                        <span>Technical</span>
+                                        <span>92%</span>
+                                    </div>
+                                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-cyan-400 w-[92%] shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="holo-card rounded-xl p-4 border border-cyan-500/20 text-center cursor-pointer" onmouseenter="tiltCard(this)" onmouseleave="resetCard(this)">
+                                    <i data-lucide="target" class="w-8 h-8 text-cyan-400 mx-auto mb-2"></i>
+                                    <div class="text-2xl font-bold text-slate-100">12</div>
+                                    <div class="text-xs text-slate-500">Active Goals</div>
+                                </div>
+                                <div class="holo-card rounded-xl p-4 border border-cyan-500/20 text-center cursor-pointer" onmouseenter="tiltCard(this)" onmouseleave="resetCard(this)">
+                                    <i data-lucide="zap" class="w-8 h-8 text-cyan-400 mx-auto mb-2"></i>
+                                    <div class="text-2xl font-bold text-slate-100">847</div>
+                                    <div class="text-xs text-slate-500">Skill Points</div>
+                                </div>
+                            </div>
+
+                            <div class="holo-card rounded-xl p-4 border border-cyan-500/20">
+                                <div class="text-sm font-mono text-cyan-400 mb-3">NEXT_MILESTONE</div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                                        <i data-lucide="award" class="w-6 h-6 text-cyan-400"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-bold text-slate-200">Senior Architect</div>
+                                        <div class="text-xs text-slate-500">Estimated: 4 months</div>
+                                    </div>
+                                    <div class="text-cyan-400 font-mono text-sm">78%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Simulation -->
+    <section id="simulation" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-4xl md:text-6xl font-bold mb-4 text-slate-100">
+                    Simulate Your <span class="text-cyan-400">Future</span>
+                </h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">
+                    Before you leap, see the landing. Our predictive engine models career outcomes 
+                    based on real market data and your unique trajectory.
+                </p>
+            </div>
+
+            <div class="glass rounded-3xl p-8 md:p-12 border-cyan-500/20 reveal">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Timeline -->
+                    <div class="md:col-span-2">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-xl font-bold text-slate-200">Trajectory Projection</h3>
+                            <div class="flex space-x-2">
+                                <button class="px-4 py-2 rounded-lg bg-cyan-500/20 text-cyan-400 text-sm font-mono border border-cyan-500/30">1 Year</button>
+                                <button class="px-4 py-2 rounded-lg glass text-slate-400 text-sm font-mono hover:text-cyan-400 transition-colors">3 Years</button>
+                                <button class="px-4 py-2 rounded-lg glass text-slate-400 text-sm font-mono hover:text-cyan-400 transition-colors">5 Years</button>
+                            </div>
+                        </div>
+
+                        <div class="relative h-64 flex items-end justify-between space-x-4" id="trajectoryGraph">
+                            <!-- Bars generated by JS -->
+                        </div>
+
+                        <div class="flex justify-between mt-4 text-xs text-slate-500 font-mono">
+                            <span>Current</span>
+                            <span>+6 Months</span>
+                            <span>+1 Year</span>
+                            <span>+18 Months</span>
+                            <span>+2 Years</span>
+                        </div>
+                    </div>
+
+                    <!-- Scenario Cards -->
+                    <div class="space-y-4">
+                        <div class="glass p-4 rounded-xl border-l-4 border-cyan-400 cursor-pointer hover:bg-cyan-500/5 transition-colors" onclick="selectScenario(this)">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-bold text-slate-200">Aggressive Growth</span>
+                                <span class="text-xs text-cyan-400 font-mono">+45%</span>
+                            </div>
+                            <p class="text-xs text-slate-500">High risk, high reward. Rapid skill acquisition with frequent role changes.</p>
+                        </div>
+
+                        <div class="glass p-4 rounded-xl border-l-4 border-slate-600 cursor-pointer hover:border-cyan-400 hover:bg-cyan-500/5 transition-colors" onclick="selectScenario(this)">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-bold text-slate-200">Steady Climb</span>
+                                <span class="text-xs text-slate-500 font-mono">+28%</span>
+                            </div>
+                            <p class="text-xs text-slate-500">Consistent advancement within current trajectory. Balanced approach.</p>
+                        </div>
+
+                        <div class="glass p-4 rounded-xl border-l-4 border-slate-600 cursor-pointer hover:border-cyan-400 hover:bg-cyan-500/5 transition-colors" onclick="selectScenario(this)">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-bold text-slate-200">Pivot Strategy</span>
+                                <span class="text-xs text-slate-500 font-mono">+35%</span>
+                            </div>
+                            <p class="text-xs text-slate-500">Transition to emerging field. Short-term plateau, long-term gain.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manifesto / CTA -->
+    <section id="manifesto" class="py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-cyan-950/20"></div>
+        
+        <div class="max-w-5xl mx-auto px-6 lg:px-8 text-center relative z-10 reveal">
+            <div class="inline-flex items-center space-x-2 mb-8">
+                <div class="w-12 h-[1px] bg-cyan-500/50"></div>
+                <span class="text-cyan-400 font-mono text-sm uppercase tracking-widest">The Future is Malleable</span>
+                <div class="w-12 h-[1px] bg-cyan-500/50"></div>
+            </div>
+
+            <h2 class="font-display text-5xl md:text-7xl font-bold mb-8 text-slate-100 leading-tight">
+                Stop searching for<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-600">your path.</span><br>
+                Start creating it.
+            </h2>
+
+            <p class="text-xl text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+                The most successful careers are not discovered—they are engineered. 
+                Join the architects of tomorrow.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button class="group relative px-10 py-5 bg-cyan-500 rounded-lg overflow-hidden magnetic" onclick="initiateOnboarding()">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <span class="relative flex items-center space-x-3 text-slate-950 font-bold text-lg">
+                        <span>Initialize Sequence</span>
+                        <i data-lucide="rocket" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                    </span>
+                </button>
+            </div>
+
+            <div class="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto text-center">
+                <div>
+                    <div class="text-3xl font-bold text-cyan-400 font-mono mb-1">∞</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest">Possibilities</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-cyan-400 font-mono mb-1">0</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest">Regrets</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-cyan-400 font-mono mb-1">1</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest">You</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-cyan-500/10 bg-slate-950/50 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+            <div class="grid md:grid-cols-4 gap-12">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-8 h-8 rounded-lg border border-cyan-500/30 flex items-center justify-center">
+                            <i data-lucide="compass" class="w-4 h-4 text-cyan-400"></i>
+                        </div>
+                        <span class="font-display font-bold text-xl text-slate-100">
+                            Career<span class="text-cyan-400">Compass</span>
+                        </span>
+                    </div>
+                    <p class="text-slate-600 mb-6 max-w-sm text-sm leading-relaxed">
+                        A living system for career evolution. Built for the curious, 
+                        the ambitious, and the brave.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-mono text-xs text-cyan-400 uppercase tracking-widest mb-4">Navigation</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Constellation</a></li>
+                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Ecosystem</a></li>
+                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Simulation</a></li>
+                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Mentors</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-mono text-xs text-cyan-400 uppercase tracking-widest mb-4">System</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Documentation</a></li>
+                        <li><a href="#" class="hover:text-cyan-400 transition-colors">API Status</a></li>
+                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Privacy Protocol</a></li>
+                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-cyan-500/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-700 text-xs font-mono">© 2024 Career Compass. All systems nominal.</p>
+                <div class="flex space-x-6 text-xs text-slate-700 font-mono">
+                    <span>v2.4.1-stable</span>
+                    <span class="text-cyan-500/50">|</span>
+                    <span>Latency: 12ms</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Magnetic Effect
+        document.querySelectorAll('.magnetic').forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        // Text Scramble Effect
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\/[]{}—=+*^?#________';
+                this.update = this.update.bind(this);
+            }
+            
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            
+            update() {
+                let output = '';
+                let complete = 0;
+                
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
+                        }
+                        output += `<span class="text-cyan-600">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                
+                this.el.innerHTML = output;
+                
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+            
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
+
+        // Initialize Scramble
+        const scrambleEl = document.getElementById('scrambleTarget');
+        const fx = new TextScramble(scrambleEl);
+        
+        const phrases = [
+            'THE INFINITE',
+            'YOUR POTENTIAL',
+            'POSSIBILITIES',
+            'THE FUTURE'
+        ];
+        
+        let counter = 0;
+        const next = () => {
+            fx.setText(phrases[counter]).then(() => {
+                setTimeout(next, 3000);
+            });
+            counter = (counter + 1) % phrases.length;
+        };
+        
+        setTimeout(next, 2000);
+
+        // Constellation Canvas
+        const canvas = document.getElementById('constellationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const stars = [];
+        const starCount = 100;
+        
+        for (let i = 0; i < starCount; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: (Math.random() - 0.5) * 0.5,
+                opacity: Math.random()
+            });
+        }
+
+        function animateConstellation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            stars.forEach(star => {
+                star.x += star.speedX;
+                star.y += star.speedY;
+                
+                if (star.x < 0 || star.x > canvas.width) star.speedX *= -1;
+                if (star.y < 0 || star.y > canvas.height) star.speedY *= -1;
+                
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(6, 182, 212, ${star.opacity})`;
+                ctx.fill();
+                
+                // Connect nearby stars
+                stars.forEach(otherStar => {
+                    const dx = star.x - otherStar.x;
+                    const dy = star.y - otherStar.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(star.x, star.y);
+                        ctx.lineTo(otherStar.x, otherStar.y);
+                        ctx.strokeStyle = `rgba(6, 182, 212, ${0.1 * (1 - distance / 100)})`;
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            requestAnimationFrame(animateConstellation);
+        }
+        animateConstellation();
+
+        // Career Map Generation
+        const careerMap = document.getElementById('careerMap');
+        const mapNodes = [
+            { x: 20, y: 30, role: 'Junior Dev' },
+            { x: 40, y: 20, role: 'Mid-Level' },
+            { x: 60, y: 35, role: 'Senior' },
+            { x: 80, y: 25, role: 'Lead' },
+            { x: 30, y: 60, role: 'Product' },
+            { x: 50, y: 70, role: 'Manager' },
+            { x: 70, y: 55, role: 'Director' },
+            { x: 90, y: 70, role: 'CTO' }
+        ];
+
+        mapNodes.forEach((node, i) => {
+            const el = document.createElement('div');
+            el.className = 'map-node';
+            el.style.left = node.x + '%';
+            el.style.top = node.y + '%';
+            el.innerHTML = `<div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 text-xs text-cyan-400 font-mono whitespace-nowrap opacity-0 hover:opacity-100 transition-opacity">${node.role}</div>`;
+            careerMap.appendChild(el);
+            
+            // Connect to next nodes
+            if (i < mapNodes.length - 1) {
+                const next = mapNodes[i + 1];
+                const line = document.createElement('div');
+                line.className = 'map-connection';
+                const length = Math.sqrt(Math.pow(next.x - node.x, 2) + Math.pow(next.y - node.y, 2));
+                const angle = Math.atan2(next.y - node.y, next.x - node.x) * 180 / Math.PI;
+                line.style.width = length + '%';
+                line.style.left = node.x + '%';
+                line.style.top = node.y + '%';
+                line.style.transform = `rotate(${angle}deg)`;
+                careerMap.appendChild(line);
+            }
+        });
+
+        // Live Stats Counter
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                obj.innerHTML = value.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Intersection Observer for reveals
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    if (entry.target.id === 'liveStats') {
+                        entry.target.querySelectorAll('[data-value]').forEach(stat => {
+                            animateValue(stat, 0, parseFloat(stat.getAttribute('data-value')), 2000);
+                        });
+                    }
+                    
+                    if (entry.target.classList.contains('stagger-grid')) {
+                        entry.target.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.stagger-grid').forEach(el => observer.observe(el));
+        observer.observe(document.getElementById('liveStats'));
+
+        // Trajectory Graph
+        const graph = document.getElementById('trajectoryGraph');
+        const bars = [45, 62, 78, 85, 92];
+        
+        bars.forEach((height, i) => {
+            const bar = document.createElement('div');
+            bar.className = 'flex-1 bg-cyan-500/20 rounded-t-lg relative group cursor-pointer hover:bg-cyan-500/40 transition-all';
+            bar.style.height = '0%';
+            bar.innerHTML = `
+                <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-cyan-400 font-mono text-sm opacity-0 group-hover:opacity-100 transition-opacity">${height}k</div>
+            `;
+            graph.appendChild(bar);
+            
+            setTimeout(() => {
+                bar.style.height = height + '%';
+                bar.style.transition = 'height 1s cubic-bezier(0.16, 1, 0.3, 1)';
+            }, i * 200);
+        });
+
+        // Holographic Card Tilt
+        function tiltCard(card) {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+        }
+
+        function resetCard(card) {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        }
+
+        // Feature Activation
+        function activateFeature(el) {
+            document.querySelectorAll('.flex.items-start').forEach(f => {
+                f.classList.remove('border-cyan-500/50', 'bg-cyan-500/10');
+            });
+            el.classList.add('border-cyan-500/50', 'bg-cyan-500/10', 'rounded-xl', 'p-4', '-m-4');
+        }
+
+        // Scenario Selection
+        function selectScenario(el) {
+            document.querySelectorAll('#simulation .glass').forEach(s => {
+                s.classList.remove('border-cyan-400');
+                s.classList.add('border-slate-600');
+                s.querySelector('.text-cyan-400')?.classList.remove('text-cyan-400');
+                s.querySelector('.text-cyan-400')?.classList.add('text-slate-500');
+            });
+            el.classList.remove('border-slate-600');
+            el.classList.add('border-cyan-400');
+            el.querySelector('.text-slate-500')?.classList.remove('text-slate-500');
+            el.querySelector('.text-slate-500')?.classList.add('text-cyan-400');
+        }
+
+        // Enter Portal Effect
+        function enterPortal() {
+            document.body.style.transition = 'all 0.5s';
+            document.body.style.transform = 'scale(1.1)';
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transform = 'scale(1)';
+                document.body.style.opacity = '1';
+                alert('Welcome to Career Compass. Your journey begins now.');
+            }, 500);
+        }
+
+        // Initiate Onboarding
+        function initiateOnboarding() {
+            const btn = event.currentTarget;
+            btn.innerHTML = '<div class="loader mx-auto"></div>';
+            setTimeout(() => {
+                btn.innerHTML = '<span class="text-slate-950 font-bold">Sequence Initiated</span>';
+                btn.classList.add('bg-green-500');
+            }, 2000);
+        }
+
+        // Navbar Scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 50) {
+                navbar.classList.add('glass', 'shadow-lg', 'shadow-cyan-500/5');
+            } else {
+                navbar.classList.remove('glass', 'shadow-lg', 'shadow-cyan-500/5');
+            }
+        });
+    </script>
+</body>
+</html>

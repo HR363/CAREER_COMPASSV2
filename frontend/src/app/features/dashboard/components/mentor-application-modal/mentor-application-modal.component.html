@@ -1,0 +1,79 @@
+<div *ngIf="isOpen" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div class="modal-content bg-gray-900 border border-white/10 w-full max-w-lg rounded-2xl shadow-2xl transform transition-all overflow-hidden" 
+         (click)="$event.stopPropagation()">
+      
+      <!-- Header -->
+      <div class="bg-gray-800/50 p-6 border-b border-white/5 flex justify-between items-center">
+        <h2 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+          Apply to be a Mentor
+        </h2>
+        <button (click)="close()" class="text-gray-400 hover:text-white transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+  
+      <!-- Body -->
+      <div class="p-6">
+        <div *ngIf="successMessage" class="bg-green-500/20 text-green-400 border border-green-500/30 p-4 rounded-lg mb-6 flex items-center text-sm">
+            <i class="fas fa-check-circle mr-2 text-lg"></i>
+            {{ successMessage }}
+        </div>
+
+        <div *ngIf="errorMessage" class="bg-red-500/20 text-red-400 border border-red-500/30 p-4 rounded-lg mb-6 flex items-center text-sm">
+            <i class="fas fa-exclamation-circle mr-2 text-lg"></i>
+            {{ errorMessage }}
+        </div>
+
+        <form *ngIf="!successMessage" [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
+          
+          <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-300 mb-2">Why do you want to be a mentor?</label>
+            <textarea formControlName="reason" rows="4"
+                      class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                      placeholder="Share your experience and how you can help others..."></textarea>
+            
+            <div *ngIf="applicationForm.get('reason')?.touched && applicationForm.get('reason')?.errors?.['required']" 
+                 class="text-red-400 text-xs mt-1">
+              Please enter your reason.
+            </div>
+            <div *ngIf="applicationForm.get('reason')?.touched && applicationForm.get('reason')?.errors?.['minlength']" 
+                 class="text-red-400 text-xs mt-1">
+              Please provide a little more detail (at least 20 characters).
+            </div>
+          </div>
+  
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-300 mb-2">Resume / LinkedIn Profile Link <span class="text-gray-500 text-xs">(Optional)</span></label>
+            <input type="text" formControlName="resumeUrl"
+                   class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                   placeholder="https://linkedin.com/in/yourprofile">
+          </div>
+  
+          <!-- Actions -->
+          <div class="flex justify-end gap-3 pt-4 border-t border-white/5">
+            <button type="button" 
+                    (click)="close()"
+                    class="px-5 py-2.5 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors border border-transparent">
+              Cancel
+            </button>
+            <button type="submit" 
+                    [disabled]="applicationForm.invalid || isSubmitting"
+                    class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center">
+              <div *ngIf="isSubmitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2"></div>
+              Submit Application
+            </button>
+          </div>
+        </form>
+
+        <div *ngIf="successMessage" class="flex justify-center mt-6">
+             <button type="button" 
+                    (click)="close()"
+                    class="px-6 py-2 bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-xl transition-colors border border-gray-700">
+              Close
+            </button>
+        </div>
+      </div>
+    </div>
+</div>

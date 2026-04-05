@@ -1,0 +1,386 @@
+// ============================================
+// UNIFIED NAVBAR STYLES - Career Compass
+// ============================================
+
+// Import shared theme variables
+@use '../../../styles/theme' as theme;
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0.75rem 0;
+  background: rgba(theme.$bg-primary, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid theme.$glass-border;
+  transition: all 0.3s theme.$transition-smooth;
+
+  &.scrolled {
+    padding: 0.5rem 0;
+    background: rgba(theme.$bg-primary, 0.95);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  &.transparent {
+    background: transparent;
+    border-bottom-color: transparent;
+    
+    &.scrolled {
+      background: rgba(theme.$bg-primary, 0.95);
+      border-bottom-color: theme.$glass-border;
+    }
+  }
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  
+  @media (max-width: 640px) {
+    padding: 0 0.75rem;
+    gap: 0.75rem;
+  }
+}
+
+// Brand
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: theme.$text-primary;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, theme.$accent-success, theme.$accent-teal);
+  border-radius: 10px;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    color: white;
+  }
+  
+  @media (max-width: 640px) {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    
+    svg {
+      width: 17px;
+      height: 17px;
+    }
+  }
+}
+
+.brand-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  
+  @media (max-width: 640px) {
+    display: none;
+  }
+}
+
+.ai-badge {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: theme.$accent-success;
+  background: rgba(theme.$accent-success, 0.15);
+  border: 1px solid rgba(theme.$accent-success, 0.3);
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  @media (max-width: 640px) {
+    padding: 0.15rem 0.35rem;
+    font-size: 0.55rem;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+  }
+}
+
+// Center Navigation
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: theme.$glass-bg;
+  border: 1px solid theme.$glass-border;
+  border-radius: 16px;
+  padding: 0.35rem;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  color: theme.$text-secondary;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 12px;
+  transition: all 0.2s theme.$transition-smooth;
+  cursor: pointer;
+  position: relative;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  
+  &:hover {
+    color: theme.$text-primary;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  &.active {
+    color: white;
+    background: linear-gradient(135deg, theme.$accent-success, theme.$accent-teal);
+    box-shadow: 0 4px 15px rgba(theme.$accent-success, 0.3);
+  }
+}
+
+.unread-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  color: white;
+  background: #ef4444;
+  border-radius: 9px;
+  transform: translate(30%, -30%);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
+// Right Actions
+.nav-end {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  @media (max-width: 640px) {
+    gap: 0.5rem;
+  }
+}
+
+.nav-link-text {
+  color: theme.$text-secondary;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: theme.$text-primary;
+  }
+  
+  @media (max-width: 640px) {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
+  }
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, theme.$accent-success, theme.$accent-teal);
+  border: none;
+  border-radius: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s theme.$transition-smooth;
+  box-shadow: 0 4px 15px rgba(theme.$accent-success, 0.25);
+  
+  @media (max-width: 640px) {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.75rem;
+    border-radius: 10px;
+    gap: 0.35rem;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(theme.$accent-success, 0.35);
+  }
+}
+
+// User Menu
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, theme.$accent-success, theme.$accent-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: theme.$glass-bg;
+  border: 1px solid theme.$glass-border;
+  border-radius: 12px;
+  color: theme.$text-secondary;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  &:hover {
+    background: rgba(theme.$accent-rose, 0.15);
+    border-color: rgba(theme.$accent-rose, 0.3);
+    color: theme.$accent-rose;
+  }
+}
+
+// Mobile Toggle
+.mobile-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background: theme.$glass-bg;
+  border: 1px solid theme.$glass-border;
+  border-radius: 12px;
+  color: theme.$text-primary;
+  cursor: pointer;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  @media (max-width: 900px) {
+    display: flex;
+  }
+}
+
+// Mobile Menu
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(theme.$bg-primary, 0.98);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid theme.$glass-border;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  transform: translateY(-10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s theme.$transition-smooth;
+
+  &.open {
+    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  @media (max-width: 900px) {
+    display: flex;
+  }
+}
+
+.mobile-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  color: theme.$text-secondary;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  &:hover, &.active {
+    color: theme.$text-primary;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  &.active {
+    color: theme.$accent-success;
+    background: rgba(theme.$accent-success, 0.1);
+  }
+  
+  &.logout {
+    color: theme.$accent-rose;
+    
+    &:hover {
+      background: rgba(theme.$accent-rose, 0.1);
+    }
+  }
+}
+
+.mobile-divider {
+  height: 1px;
+  background: theme.$glass-border;
+  margin: 0.5rem 0;
+}

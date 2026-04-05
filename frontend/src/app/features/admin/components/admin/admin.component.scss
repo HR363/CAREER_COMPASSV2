@@ -1,0 +1,652 @@
+// ============================================
+// ADMIN PAGE - Unified Theme
+// ============================================
+
+// Import shared theme variables
+@use '../../../../styles/theme' as theme;
+
+// Local variables using theme
+$bg-primary: theme.$bg-primary;
+$accent-primary: theme.$accent-primary;
+$accent-secondary: theme.$accent-secondary;
+$glass-bg: theme.$glass-bg;
+$glass-border: theme.$glass-border;
+
+.admin-container {
+  min-height: 100vh;
+  background: $bg-primary;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.animated-bg {
+  display: none; // Disabled gradient background
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    animation: float 25s ease-in-out infinite;
+
+    &.orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba($accent-primary, 0.4) 0%, transparent 70%);
+      top: -150px;
+      right: -150px;
+    }
+
+    &.orb-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba($accent-secondary, 0.3) 0%, transparent 70%);
+      bottom: -150px;
+      left: -150px;
+      animation-delay: 12s;
+    }
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -40px) scale(1.1); }
+}
+
+// Page Header
+.page-header {
+  margin-bottom: 2rem;
+  
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: theme.$text-primary;
+    margin-bottom: 0.5rem;
+  }
+  
+  .page-subtitle {
+    color: theme.$text-secondary;
+    font-size: 1rem;
+  }
+}
+
+.admin-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  transition: all 0.4s theme.$transition-smooth;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-color: rgba($accent-primary, 0.2);
+  }
+
+  .stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .stat-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: theme.$bg-secondary;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: theme.$accent-light;
+    }
+
+    &.users svg { color: theme.$accent-light; }
+    &.mentors svg { color: $accent-secondary; }
+    &.sessions svg { color: theme.$accent-success; }
+    &.revenue svg { color: theme.$accent-warning; }
+  }
+
+  .stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    
+    &.positive {
+      color: theme.$accent-success;
+      background: rgba(theme.$accent-success, 0.1);
+    }
+
+    &.negative {
+      color: theme.$accent-danger;
+      background: rgba(theme.$accent-danger, 0.1);
+    }
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: theme.$text-primary;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: theme.$text-secondary;
+  }
+}
+
+.stat-applications {
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: rgba(rgb(234, 179, 8), 0.05);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  .stat-icon svg { color: rgb(234, 179, 8); }
+}
+
+.admin-sections {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.admin-card {
+  background: $glass-bg;
+  border: 1px solid $glass-border;
+  border-radius: 2rem;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid $glass-border;
+  background: theme.$bg-secondary;
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: theme.$text-primary;
+  }
+
+  .card-action {
+    padding: 0.5rem 1rem;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 0.75rem;
+    color: theme.$accent-light;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s theme.$transition-smooth;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.users-list, .sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.user-item, .session-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: theme.$bg-secondary;
+  border: 1px solid $glass-border;
+  border-radius: 1rem;
+  transition: all 0.3s theme.$transition-smooth;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateX(5px);
+  }
+}
+
+.info-card {
+  background: theme.$glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid theme.$glass-border;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: theme.$text-primary;
+  margin-bottom: 0.5rem;
+}
+
+.card-description {
+  color: theme.$text-secondary;
+  margin-bottom: 1.5rem;
+}
+
+.feature-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: theme.$bg-secondary;
+  border: 1px solid theme.$glass-border;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(theme.$accent-primary, 0.4);
+    box-shadow: 0 4px 12px rgba(theme.$accent-primary, 0.1);
+  }
+
+  .feature-icon {
+    font-size: 1.5rem;
+  }
+
+  .feature-info {
+    h4 {
+      font-weight: 600;
+      color: theme.$text-primary;
+      margin: 0 0 0.25rem 0;
+    }
+    p {
+      font-size: 0.875rem;
+      color: theme.$text-secondary;
+      margin: 0;
+    }
+  }
+}
+
+.spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid theme.$accent-primary;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.user-info {
+  flex: 1;
+
+  .user-name {
+    font-weight: 600;
+    color: theme.$text-primary;
+    margin-bottom: 0.25rem;
+  }
+
+  .user-email {
+    font-size: 0.75rem;
+    color: theme.$text-secondary;
+  }
+}
+
+.role-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.role-admin {
+    background: rgba(theme.$accent-danger, 0.1);
+    color: theme.$accent-danger;
+    border: 1px solid rgba(theme.$accent-danger, 0.3);
+  }
+
+  &.role-mentor {
+    background: rgba($accent-secondary, 0.1);
+    color: $accent-secondary;
+    border: 1px solid rgba($accent-secondary, 0.3);
+  }
+
+  &.role-student {
+    background: rgba(theme.$accent-success, 0.1);
+    color: theme.$accent-success;
+    border: 1px solid rgba(theme.$accent-success, 0.3);
+  }
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid $glass-border;
+  background: $glass-bg;
+  color: theme.$text-secondary;
+  cursor: pointer;
+  transition: all 0.3s theme.$transition-smooth;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: theme.$text-primary;
+  }
+
+  &.delete:hover {
+    color: theme.$accent-danger;
+    border-color: rgba(theme.$accent-danger, 0.3);
+  }
+}
+
+.session-info {
+  flex: 1;
+
+  .session-title {
+    font-weight: 600;
+    color: theme.$text-primary;
+    margin-bottom: 0.25rem;
+  }
+
+  .session-participants {
+    font-size: 0.75rem;
+    color: theme.$text-secondary;
+  }
+}
+
+.session-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.status-scheduled {
+    background: rgba(theme.$accent-warning, 0.1);
+    color: theme.$accent-warning;
+    border: 1px solid rgba(theme.$accent-warning, 0.3);
+  }
+
+  &.status-active {
+    background: rgba(theme.$accent-success, 0.1);
+    color: theme.$accent-success;
+    border: 1px solid rgba(theme.$accent-success, 0.3);
+    animation: pulse-status 2s infinite;
+  }
+
+  &.status-completed {
+    background: rgba(theme.$accent-info, 0.1);
+    color: theme.$accent-info;
+    border: 1px solid rgba(theme.$accent-info, 0.3);
+  }
+}
+
+@keyframes pulse-status {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.session-time {
+  font-size: 0.75rem;
+  color: theme.$text-secondary;
+  text-align: right;
+  min-width: 80px;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: theme.$bg-secondary;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid $glass-border;
+  }
+
+  th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: theme.$text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: $bg-primary;
+  }
+
+  td {
+    font-size: 0.875rem;
+    color: theme.$text-primary;
+  }
+
+  tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: theme.$text-muted;
+
+  .empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1rem;
+    color: theme.$text-muted;
+    background: theme.$bg-secondary;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+
+  .spinner {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 3px solid $glass-border;
+    border-top-color: $accent-primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1024px) {
+  .admin-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-content {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+
+    .stat-value {
+      font-size: 1.5rem;
+    }
+  }
+
+  .admin-card {
+    border-radius: 1.5rem;
+  }
+
+  .card-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .user-item, .session-item {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .user-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+// Info Card styles
+.info-card {
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: theme.$text-primary;
+    margin-bottom: 1rem;
+  }
+
+  .card-description {
+    color: theme.$text-secondary;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: theme.$bg-secondary;
+  border-radius: 1rem;
+  border: 1px solid $glass-border;
+
+  .feature-icon {
+    font-size: 1.5rem;
+  }
+
+  .feature-info {
+    h4 {
+      font-weight: 600;
+      color: theme.$text-primary;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: theme.$text-secondary;
+    }
+  }
+}

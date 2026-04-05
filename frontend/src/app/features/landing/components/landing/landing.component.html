@@ -1,0 +1,563 @@
+<div class="landing-container">
+  <!-- Cursor Glow Effect -->
+  <div class="cursor-glow" [style.left.px]="cursorX" [style.top.px]="cursorY"></div>
+  <div class="cursor-glow-secondary" [style.left.px]="cursorX" [style.top.px]="cursorY"></div>
+  
+  <!-- Floating Background Icons -->
+  <div class="floating-icons-container">
+    <div class="floating-icon" 
+         *ngFor="let icon of floatingIcons; let i = index"
+         [style.left.%]="icon.x"
+         [style.top.%]="icon.y"
+         [style.font-size.px]="icon.size"
+         [style.animation-delay.s]="icon.delay"
+         [style.animation-duration.s]="15 + icon.speed * 10"
+         [style.opacity]="icon.opacity">
+      {{ icon.icon }}
+    </div>
+  </div>
+
+  <!-- Grid Background -->
+  <div class="grid-background"></div>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <!-- Gradient Orbs -->
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    
+    <div class="hero-wrapper">
+      <div class="hero-content animate-on-scroll">
+        <div class="badge animate-on-scroll">
+          <span class="badge-dot"></span>
+          <span>AI-Powered Career Platform</span>
+        </div>
+        
+        <h1 class="hero-title animate-on-scroll">
+          <span class="title-line">Navigate Your</span>
+          <span class="title-line gradient-text-animated">Career Journey</span>
+          <span class="title-line">with <span class="highlight-text">Confidence</span></span>
+        </h1>
+        
+        <p class="hero-subtitle animate-on-scroll">
+          Transform your professional journey with AI-driven insights, personalized learning paths, 
+          and expert mentorship—all in one platform.
+        </p>
+        
+        <div class="hero-actions animate-on-scroll">
+          <a routerLink="/auth/register" class="btn-hero-primary magnetic-btn">
+            <span class="btn-content">
+              <span class="btn-text">Start Free Trial</span>
+              <span class="btn-icon">→</span>
+            </span>
+            <span class="btn-glow"></span>
+          </a>
+          <a routerLink="/auth/login" class="btn-hero-secondary magnetic-btn">
+            <span class="btn-content">
+              <span class="play-icon">▶</span>
+              <span class="btn-text">Watch Demo</span>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-image animate-on-scroll">
+        <div class="hero-image-glow"></div>
+        <img src="assets/hero2.png" alt="Career Journey Illustration" />
+        <div class="hero-image-particles">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Animated Stats -->
+    <div class="hero-stats animate-on-scroll">
+      <div class="stat-item glass-card" *ngFor="let stat of stats; let i = index"
+           [style.animation-delay.ms]="i * 100">
+        <div class="stat-icon-wrapper">
+          <span class="stat-icon">{{ stat.icon }}</span>
+        </div>
+        <div class="stat-value counter-animate">{{ stat.value }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+        <div class="stat-glow"></div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+      <span class="scroll-text">Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- Partners Section -->
+  <section class="partners-section animate-on-scroll">
+    <p class="partners-title">Trusted by industry leaders</p>
+    <div class="partners-marquee">
+      <div class="partners-track">
+        <div class="partner-logo" *ngFor="let partner of partners">
+          <span class="partner-name">{{ partner }}</span>
+        </div>
+        <div class="partner-logo" *ngFor="let partner of partners">
+          <span class="partner-name">{{ partner }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="section-header animate-on-scroll">
+      <span class="section-badge">
+        <span class="badge-icon">✨</span>
+        <span>Comprehensive Features</span>
+      </span>
+      <h2 class="section-title">
+        Everything You Need to
+        <span class="gradient-text-animated">Succeed</span>
+      </h2>
+      <p class="section-subtitle">
+        Discover a complete ecosystem of powerful tools designed to transform your professional growth.
+      </p>
+    </div>
+    
+    <div class="features-bento">
+      <!-- Large featured card -->
+      <div class="feature-card featured glass-card animate-on-scroll"
+           #featuredCard
+           (mousemove)="featuredCard.style.transform = getCardTransform($event, featuredCard)"
+           (mouseleave)="featuredCard.style.transform = resetCardTransform()">
+        <div class="card-shine"></div>
+        <img class="feature-image-large" [src]="features[0].image" [alt]="features[0].title" loading="lazy">
+        
+        <div class="feature-content-overlay">
+          <div class="feature-badge pulse-badge">Most Popular</div>
+          <div class="feature-icon-large">{{ features[0].icon }}</div>
+          <h3 class="feature-title-large">{{ features[0].title }}</h3>
+          <p class="feature-description-large">{{ features[0].description }}</p>
+          <div class="feature-stats">
+            <div class="stat">
+              <div class="stat-number">10K+</div>
+              <div class="stat-label">Users</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">95%</div>
+              <div class="stat-label">Success Rate</div>
+            </div>
+          </div>
+          <a routerLink="/auth/register" class="feature-btn glow-btn">Explore Now →</a>
+        </div>
+      </div>
+
+      <!-- Compact cards -->
+      <div class="feature-card compact glass-card animate-on-scroll" 
+           *ngFor="let feature of features.slice(1); let i = index"
+           #compactCard
+           [style.animation-delay.ms]="(i + 1) * 150"
+           (mousemove)="compactCard.style.transform = getCardTransform($event, compactCard)"
+           (mouseleave)="compactCard.style.transform = resetCardTransform()">
+        <div class="card-shine"></div>
+        <img class="feature-compact-image" [src]="feature.image" [alt]="feature.title" loading="lazy">
+        
+        <div class="feature-compact-overlay">
+          <div class="feature-icon-compact">{{ feature.icon }}</div>
+          <h3 class="feature-title-compact">{{ feature.title }}</h3>
+          <p class="feature-description-compact">{{ feature.description }}</p>
+          <a class="feature-link-compact">Learn more →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works - Interactive Journey -->
+  <section class="how-it-works">
+    <!-- Background Elements -->
+    <div class="journey-bg-glow"></div>
+    <div class="journey-bg-grid"></div>
+    
+    <div class="section-header animate-on-scroll">
+      <span class="section-badge">
+        <span class="badge-icon">🚀</span>
+        <span>Your Journey</span>
+      </span>
+      <h2 class="section-title">Transform Your Career in <span class="gradient-text-animated">3 Simple Steps</span></h2>
+      <p class="section-subtitle">Follow our proven path to career success, guided by AI and expert mentors</p>
+    </div>
+    
+    <div class="journey-container">
+      <!-- Progress Line -->
+      <div class="journey-progress-track">
+        <div class="journey-progress-fill" [style.height.%]="stepsProgress"></div>
+        <div class="journey-progress-glow" [style.top.%]="stepsProgress"></div>
+      </div>
+      
+      <!-- Step Cards -->
+      <div class="journey-steps">
+        <div class="journey-step" 
+             *ngFor="let step of journeySteps; let i = index"
+             [class.active]="isStepActive(i)"
+             [class.current]="isStepCurrent(i)">
+          
+          <!-- Step Connector Node -->
+          <div class="step-node">
+            <div class="step-node-ring"></div>
+            <div class="step-node-core">
+              <span class="step-node-number">{{ step.number }}</span>
+            </div>
+            <div class="step-node-pulse"></div>
+          </div>
+          
+          <!-- Step Content Card -->
+          <div class="step-content-wrapper" [class.left]="i % 2 === 0" [class.right]="i % 2 !== 0">
+            <div class="step-card-enhanced glass-card">
+              <div class="step-card-shine"></div>
+              
+              <!-- Graphic Section -->
+              <div class="step-graphic">
+                <!-- Profile Graphic -->
+                <svg *ngIf="step.graphic === 'profile'" viewBox="0 0 200 150" class="step-svg">
+                  <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#14b8a6;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <!-- User silhouette -->
+                  <circle cx="100" cy="50" r="25" fill="url(#grad1)" class="svg-animate-pop"/>
+                  <path d="M60,120 Q100,90 140,120" fill="url(#grad1)" class="svg-animate-pop" style="animation-delay: 0.2s"/>
+                  <!-- Form lines -->
+                  <rect x="30" y="35" width="30" height="4" rx="2" fill="rgba(255,255,255,0.3)" class="svg-animate-slide"/>
+                  <rect x="30" y="45" width="20" height="4" rx="2" fill="rgba(255,255,255,0.2)" class="svg-animate-slide" style="animation-delay: 0.1s"/>
+                  <rect x="140" y="35" width="30" height="4" rx="2" fill="rgba(255,255,255,0.3)" class="svg-animate-slide" style="animation-delay: 0.2s"/>
+                  <rect x="150" y="45" width="20" height="4" rx="2" fill="rgba(255,255,255,0.2)" class="svg-animate-slide" style="animation-delay: 0.3s"/>
+                  <!-- Sparkles -->
+                  <circle cx="45" cy="70" r="3" fill="#22c55e" class="svg-sparkle"/>
+                  <circle cx="155" cy="80" r="2" fill="#14b8a6" class="svg-sparkle" style="animation-delay: 0.5s"/>
+                  <circle cx="80" cy="130" r="2" fill="#22c55e" class="svg-sparkle" style="animation-delay: 1s"/>
+                </svg>
+                
+                <!-- AI Graphic -->
+                <svg *ngIf="step.graphic === 'ai'" viewBox="0 0 200 150" class="step-svg">
+                  <defs>
+                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#14b8a6;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Brain/AI icon -->
+                  <circle cx="100" cy="75" r="40" fill="none" stroke="url(#grad2)" stroke-width="3" class="svg-animate-draw"/>
+                  <path d="M75,75 Q85,55 100,55 Q115,55 125,75 Q115,95 100,95 Q85,95 75,75" fill="url(#grad2)" opacity="0.3" class="svg-animate-pop"/>
+                  <!-- Neural connections -->
+                  <line x1="60" y1="50" x2="85" y2="65" stroke="#22c55e" stroke-width="2" class="svg-animate-draw" style="animation-delay: 0.3s"/>
+                  <line x1="140" y1="50" x2="115" y2="65" stroke="#14b8a6" stroke-width="2" class="svg-animate-draw" style="animation-delay: 0.4s"/>
+                  <line x1="60" y1="100" x2="85" y2="85" stroke="#22c55e" stroke-width="2" class="svg-animate-draw" style="animation-delay: 0.5s"/>
+                  <line x1="140" y1="100" x2="115" y2="85" stroke="#14b8a6" stroke-width="2" class="svg-animate-draw" style="animation-delay: 0.6s"/>
+                  <!-- Nodes -->
+                  <circle cx="55" cy="45" r="6" fill="#22c55e" class="svg-node-pulse"/>
+                  <circle cx="145" cy="45" r="6" fill="#14b8a6" class="svg-node-pulse" style="animation-delay: 0.2s"/>
+                  <circle cx="55" cy="105" r="6" fill="#14b8a6" class="svg-node-pulse" style="animation-delay: 0.4s"/>
+                  <circle cx="145" cy="105" r="6" fill="#22c55e" class="svg-node-pulse" style="animation-delay: 0.6s"/>
+                  <!-- Data particles -->
+                  <circle cx="100" cy="75" r="4" fill="white" class="svg-sparkle"/>
+                </svg>
+                
+                <!-- Connect Graphic -->
+                <svg *ngIf="step.graphic === 'connect'" viewBox="0 0 200 150" class="step-svg">
+                  <defs>
+                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#14b8a6;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Multiple user icons -->
+                  <circle cx="60" cy="60" r="18" fill="url(#grad3)" class="svg-animate-pop"/>
+                  <circle cx="140" cy="60" r="18" fill="url(#grad3)" class="svg-animate-pop" style="animation-delay: 0.2s"/>
+                  <circle cx="100" cy="100" r="22" fill="url(#grad3)" class="svg-animate-pop" style="animation-delay: 0.4s"/>
+                  <!-- Connection lines -->
+                  <line x1="75" y1="65" x2="85" y2="85" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-dasharray="4" class="svg-animate-draw"/>
+                  <line x1="125" y1="65" x2="115" y2="85" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-dasharray="4" class="svg-animate-draw" style="animation-delay: 0.3s"/>
+                  <line x1="75" y1="60" x2="122" y2="60" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-dasharray="4" class="svg-animate-draw" style="animation-delay: 0.2s"/>
+                  <!-- Growth arrow -->
+                  <path d="M165,130 L175,110 L185,130" fill="none" stroke="#22c55e" stroke-width="3" class="svg-animate-draw" style="animation-delay: 0.5s"/>
+                  <line x1="175" y1="110" x2="175" y2="140" stroke="#22c55e" stroke-width="3" class="svg-animate-draw" style="animation-delay: 0.6s"/>
+                  <!-- Stars -->
+                  <polygon points="30,90 32,96 38,96 33,100 35,106 30,102 25,106 27,100 22,96 28,96" fill="#22c55e" class="svg-sparkle"/>
+                  <polygon points="170,30 171,34 175,34 172,36 173,40 170,38 167,40 168,36 165,34 169,34" fill="#14b8a6" class="svg-sparkle" style="animation-delay: 0.7s"/>
+                </svg>
+              </div>
+              
+              <!-- Text Content -->
+              <div class="step-text-content">
+                <div class="step-icon-badge">
+                  <span>{{ step.icon }}</span>
+                </div>
+                <h3 class="step-title-enhanced">{{ step.title }}</h3>
+                <p class="step-description-enhanced">{{ step.description }}</p>
+                
+                <!-- Feature list -->
+                <ul class="step-features">
+                  <li *ngFor="let detail of step.details; let j = index" 
+                      class="step-feature-item"
+                      [style.animation-delay.ms]="j * 100">
+                    <span class="feature-check">✓</span>
+                    <span>{{ detail }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- CTA at bottom of journey -->
+      <div class="journey-cta animate-on-scroll">
+        <a routerLink="/auth/register" class="journey-start-btn">
+          <span class="btn-text">Start Your Journey</span>
+          <span class="btn-arrow">→</span>
+          <div class="btn-bg-animate"></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials-section">
+    <div class="section-header animate-on-scroll">
+      <span class="section-badge">
+        <span class="badge-icon">💬</span>
+        <span>Success Stories</span>
+      </span>
+      <h2 class="section-title">Loved by <span class="gradient-text-animated">Thousands</span></h2>
+    </div>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card glass-card animate-on-scroll" 
+           *ngFor="let testimonial of testimonials; let i = index"
+           #testimonialCard
+           [style.animation-delay.ms]="i * 150"
+           (mousemove)="testimonialCard.style.transform = getCardTransform($event, testimonialCard)"
+           (mouseleave)="testimonialCard.style.transform = resetCardTransform()">
+        <div class="card-shine"></div>
+        <div class="quote-icon">"</div>
+        <p class="testimonial-content">{{ testimonial.content }}</p>
+        <div class="testimonial-footer">
+          <div class="avatar-wrapper">
+            <div class="avatar">{{ testimonial.avatar }}</div>
+            <div class="avatar-glow"></div>
+          </div>
+          <div class="testimonial-info">
+            <div class="testimonial-name">{{ testimonial.name }}</div>
+            <div class="testimonial-role">{{ testimonial.role }}</div>
+          </div>
+          <div class="rating">
+            <span class="star" *ngFor="let star of [1,2,3,4,5]">⭐</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles Section -->
+  <section class="articles-section">
+    <div class="section-glow"></div>
+    
+    <div class="section-header animate-on-scroll">
+      <span class="section-badge">
+        <span class="badge-icon">📚</span>
+        <span>Latest Insights</span>
+      </span>
+      <h2 class="section-title">Knowledge from <span class="gradient-text-animated">Experts</span></h2>
+      <p class="section-subtitle">Stay updated with the latest trends and advice from top professionals</p>
+    </div>
+
+    <!-- Tags Filter -->
+    <div class="tags-container animate-on-scroll">
+      <button class="tag-btn" *ngFor="let tag of tags" [class.active]="activeTag === tag" (click)="setActiveTag(tag)">
+        <span class="tag-text">{{ tag }}</span>
+        <span class="tag-glow"></span>
+      </button>
+    </div>
+
+    <div class="articles-container">
+      <!-- Featured Article -->
+      <div class="featured-article glass-card animate-on-scroll" *ngIf="articles.length > 0"
+           #featuredArticle
+           (mousemove)="featuredArticle.style.transform = getCardTransform($event, featuredArticle)"
+           (mouseleave)="featuredArticle.style.transform = resetCardTransform()">
+        <div class="card-shine"></div>
+        <div class="featured-image-wrapper">
+          <img [src]="articles[0].image" [alt]="articles[0].title" class="featured-image">
+          <div class="featured-overlay"></div>
+          <div class="featured-badges">
+            <span class="featured-tag" *ngFor="let tag of articles[0].tags">{{ tag }}</span>
+          </div>
+        </div>
+        <div class="featured-content">
+          <div class="meta-row">
+            <span class="featured-label">⭐ Featured Story</span>
+            <span class="meta-date">{{ articles[0].date }}</span>
+            <span class="meta-dot">•</span>
+            <span class="meta-read">{{ articles[0].readTime }}</span>
+          </div>
+          <h3 class="featured-title">{{ articles[0].title }}</h3>
+          <p class="featured-excerpt">{{ articles[0].excerpt }}</p>
+          <div class="featured-author">
+            <div class="author-avatar-lg">{{ articles[0].author.charAt(0) }}</div>
+            <div class="author-details">
+              <span class="author-name">{{ articles[0].author }}</span>
+              <span class="author-role">{{ articles[0].role }}</span>
+            </div>
+            <a href="#" class="read-more-btn glow-btn">Read Article →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Articles Grid -->
+      <div class="articles-grid">
+        <div class="article-card glass-card animate-on-scroll" 
+             *ngFor="let article of articles.slice(1); let i = index"
+             #articleCard
+             [style.animation-delay.ms]="i * 100"
+             (mousemove)="articleCard.style.transform = getCardTransform($event, articleCard)"
+             (mouseleave)="articleCard.style.transform = resetCardTransform()">
+          <div class="card-shine"></div>
+          <div class="article-image">
+            <img [src]="article.image" [alt]="article.title" loading="lazy">
+            <div class="article-tags">
+              <span class="tag" *ngFor="let tag of article.tags">{{ tag }}</span>
+            </div>
+          </div>
+          <div class="article-content">
+            <div class="article-meta">
+              <span class="date">{{ article.date }}</span>
+              <span class="dot">•</span>
+              <span class="read-time">{{ article.readTime }}</span>
+            </div>
+            <h3 class="article-title">{{ article.title }}</h3>
+            <div class="article-footer">
+              <div class="article-author-sm">
+                <div class="author-avatar-sm">{{ article.author.charAt(0) }}</div>
+                <div class="author-info-sm">
+                  <div class="name">{{ article.author }}</div>
+                </div>
+              </div>
+              <span class="read-link">Read →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="view-all-wrapper animate-on-scroll">
+        <button class="btn-view-all glow-btn">
+          <span>View All Articles</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="section-header animate-on-scroll">
+      <span class="section-badge">
+        <span class="badge-icon">❓</span>
+        <span>FAQ</span>
+      </span>
+      <h2 class="section-title">Frequently Asked <span class="gradient-text-animated">Questions</span></h2>
+    </div>
+    
+    <div class="faq-container">
+      <div class="faq-item glass-card animate-on-scroll" 
+           *ngFor="let faq of faqs; let i = index" 
+           [class.active]="faq.isOpen" 
+           [style.animation-delay.ms]="i * 100"
+           (click)="toggleFaq(i)">
+        <div class="faq-question">
+          <h3>{{ faq.question }}</h3>
+          <span class="faq-icon">{{ faq.isOpen ? '−' : '+' }}</span>
+        </div>
+        <div class="faq-answer">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section animate-on-scroll">
+    <div class="cta-card">
+      <div class="cta-glow"></div>
+      <div class="cta-particles">
+        <span class="particle" *ngFor="let p of [1,2,3,4,5,6,7,8]"></span>
+      </div>
+      <div class="cta-content">
+        <div class="cta-icon">🚀</div>
+        <h2 class="cta-title">Ready to Transform Your Career?</h2>
+        <p class="cta-description">
+          Join thousands of professionals who have accelerated their careers with CareerCompass AI
+        </p>
+        <div class="cta-actions">
+          <a routerLink="/auth/register" class="btn-cta-primary magnetic-btn">
+            <span class="btn-content">
+              <span>Start Your Free Trial</span>
+              <span class="arrow">→</span>
+            </span>
+            <span class="btn-shine"></span>
+          </a>
+          <p class="cta-note">✓ No credit card required • ✓ 14-day free trial • ✓ Cancel anytime</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-glow"></div>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <span class="logo-icon">🧭</span>
+          <span class="logo-text">CareerCompass</span>
+        </div>
+        <p class="footer-tagline">Navigate your career with confidence</p>
+        <div class="social-links">
+          <a href="#" class="social-link">𝕏</a>
+          <a href="#" class="social-link">in</a>
+          <a href="#" class="social-link">◉</a>
+        </div>
+      </div>
+      
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="#">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">Mentors</a>
+        </div>
+        <div class="footer-column">
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Blog</a>
+          <a href="#">Careers</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Contact</a>
+          <a href="#">FAQ</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 CareerCompass AI. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+</div>

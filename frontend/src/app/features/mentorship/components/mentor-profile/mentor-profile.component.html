@@ -1,0 +1,294 @@
+<div class="mentor-profile-container">
+  <!-- Navigation -->
+  <nav class="profile-nav">
+    <div class="nav-content">
+      <div class="nav-left">
+        <button (click)="goBack()" class="back-btn">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="nav-title">👨‍🏫 Mentor Profile</h1>
+      </div>
+      <div class="nav-right">
+        <span class="user-name">{{ currentUser?.name }}</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading mentor profile...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && mentor" class="profile-content">
+    <!-- Left Panel - Mentor Info Card -->
+    <div class="info-panel">
+      <div class="mentor-card">
+        <!-- Avatar -->
+        <div class="mentor-avatar-large">
+          <span class="avatar-text">{{ mentor.name.charAt(0).toUpperCase() }}</span>
+        </div>
+
+        <!-- Basic Info -->
+        <h2 class="mentor-name">{{ mentor.name }}</h2>
+        <p class="mentor-email">{{ mentor.email }}</p>
+        
+        <div class="mentor-meta" *ngIf="mentor.profile?.education">
+          <span class="meta-label">Education</span>
+          <p class="meta-value">{{ mentor.profile?.education }}</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+          <div class="stat-box">
+            <span class="stat-number">{{ mentor.resources?.length || 0 }}</span>
+            <span class="stat-label">Resources</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number">{{ parseSkills(mentor.profile?.skills).length }}</span>
+            <span class="stat-label">Skills</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn-primary" (click)="openScheduleModal()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            Schedule Session
+          </button>
+          <button class="btn-secondary" (click)="setActiveTab('messages')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            Send Message
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Tabs Content -->
+    <div class="content-panel">
+      <!-- Tabs -->
+      <div class="tabs-header">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'profile'"
+          (click)="setActiveTab('profile')">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+          Profile
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'resources'"
+          (click)="setActiveTab('resources')">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          Resources ({{ mentor.resources?.length || 0 }})
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'messages'"
+          (click)="setActiveTab('messages')">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          Messages
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Profile Tab -->
+        <div *ngIf="activeTab === 'profile'" class="profile-tab">
+          <!-- Skills -->
+          <div class="info-section" *ngIf="parseSkills(mentor.profile?.skills).length > 0">
+            <h3 class="section-title">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+              Skills & Expertise
+            </h3>
+            <div class="tags-container">
+              <span *ngFor="let skill of parseSkills(mentor.profile?.skills)" class="skill-tag">
+                {{ skill }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Interests -->
+          <div class="info-section" *ngIf="parseInterests(mentor.profile?.interests).length > 0">
+            <h3 class="section-title">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+              Areas of Interest
+            </h3>
+            <div class="tags-container">
+              <span *ngFor="let interest of parseInterests(mentor.profile?.interests)" class="interest-tag">
+                {{ interest }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Goals -->
+          <div class="info-section" *ngIf="mentor.profile?.goals">
+            <h3 class="section-title">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+              </svg>
+              Goals & Vision
+            </h3>
+            <p class="section-text">{{ mentor.profile?.goals }}</p>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="!mentor.profile?.skills && !mentor.profile?.interests && !mentor.profile?.goals" class="empty-section">
+            <p>This mentor hasn't added detailed profile information yet.</p>
+          </div>
+        </div>
+
+        <!-- Resources Tab -->
+        <div *ngIf="activeTab === 'resources'" class="resources-tab">
+          <div *ngIf="mentor.resources && mentor.resources.length > 0">
+            <div *ngFor="let category of getAllCategories()" class="resource-category">
+              <h3 class="category-title">
+                <span class="category-icon">{{ getResourceIcon(category) }}</span>
+                {{ category | titlecase }}s
+              </h3>
+              <div class="resources-list">
+                <div *ngFor="let resource of getResourcesByCategory(category)" 
+                     class="resource-item"
+                     (click)="openResource(resource.link)">
+                  <div class="resource-icon">{{ getResourceIcon(resource.category) }}</div>
+                  <div class="resource-content">
+                    <h4 class="resource-title">{{ resource.title }}</h4>
+                    <p class="resource-link">{{ resource.link }}</p>
+                    <span class="resource-date">Added {{ resource.createdAt | date:'MMM dd, yyyy' }}</span>
+                  </div>
+                  <svg class="resource-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!mentor.resources || mentor.resources.length === 0" class="empty-section">
+            <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+            <h3>No resources yet</h3>
+            <p>This mentor hasn't shared any resources yet.</p>
+          </div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div *ngIf="activeTab === 'messages'" class="messages-tab">
+          <!-- Messages Container -->
+          <div class="messages-wrapper">
+            <div #messagesContainer class="messages-container">
+              <!-- Loading -->
+              <div *ngIf="isLoadingMessages" class="messages-loading">
+                <div class="loading-spinner small"></div>
+                <span>Loading messages...</span>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="!isLoadingMessages && messages.length === 0" class="messages-empty">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                <h4>Start a conversation</h4>
+                <p>Send a message to {{ mentor.name }} to get started.</p>
+              </div>
+
+              <!-- Messages List -->
+              <div *ngIf="!isLoadingMessages && messages.length > 0" class="messages-list">
+                <div *ngFor="let message of messages" 
+                     class="message-bubble"
+                     [class.own]="isOwnMessage(message)">
+                  <div class="message-content">{{ message.content }}</div>
+                  <div class="message-time">{{ message.createdAt | date:'MMM dd, h:mm a' }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Message Input -->
+            <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="message-form">
+              <input 
+                type="text" 
+                formControlName="content"
+                placeholder="Type your message..."
+                class="message-input"
+                [disabled]="isSendingMessage"
+              />
+              <button 
+                type="submit" 
+                class="send-btn"
+                [disabled]="messageForm.invalid || isSendingMessage">
+                <svg *ngIf="!isSendingMessage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+                <div *ngIf="isSendingMessage" class="loading-spinner tiny"></div>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Modal -->
+  <div *ngIf="showScheduleModal" class="modal-overlay" (click)="closeScheduleModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>📅 Schedule Session with {{ mentor?.name }}</h3>
+        <button class="close-btn" (click)="closeScheduleModal()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <form [formGroup]="scheduleForm" (ngSubmit)="scheduleSession()">
+        <div class="form-group">
+          <label class="form-label">Select Date & Time</label>
+          <input type="datetime-local" formControlName="scheduledAt" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description (Optional)</label>
+          <textarea 
+            formControlName="description" 
+            rows="3" 
+            class="form-textarea"
+            placeholder="What would you like to discuss?"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closeScheduleModal()">Cancel</button>
+          <button type="submit" class="btn-confirm" [disabled]="scheduleForm.invalid || isScheduling">
+            <span *ngIf="isScheduling" class="loading-spinner tiny"></span>
+            {{ isScheduling ? 'Scheduling...' : 'Schedule Session' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

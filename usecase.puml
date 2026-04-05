@@ -1,0 +1,60 @@
+@startuml CareerCompass_UseCase
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor #E8F4FD
+    BorderColor #667eea
+    ArrowColor #764ba2EXTREMELY FAST BUOY
+}
+skinparam actor {
+    BackgroundColor #667eea
+    BorderColor #764ba2
+}
+skinparam rectangle {
+    BackgroundColor #F8F9FA
+    BorderColor #667eea
+    RoundCorner 20
+}
+
+title CareerCompass AI - Use Case Diagram
+
+actor "Student" as S #LightBlue
+actor "Mentor" as M #LightGreen
+actor "Administrator" as A #LightCoral
+
+rectangle "CareerCompass AI System" {
+    usecase "Register/Login" as UC1
+    usecase "Input Profile & Skills" as UC2
+    usecase "Get AI Career Roadmap" as UC3
+    usecase "Book Mentorship Session" as UC4
+    usecase "Join Video Call" as UC5
+    usecase "Chat with Mentor" as UC6
+    usecase "Manage Schedule" as UC7
+    usecase "Approve Session Requests" as UC8
+    usecase "Verify Mentors" as UC9
+    usecase "View Analytics Dashboard" as UC10
+}
+
+' Student interactions
+S --> UC1
+S --> UC2
+S --> UC3
+S --> UC4
+S --> UC5
+S --> UC6
+
+' Mentor interactions
+M --> UC1
+M --> UC7
+M --> UC8
+M --> UC5
+M --> UC6
+
+' Administrator interactions
+A --> UC1
+A --> UC9
+A --> UC10
+
+@enduml

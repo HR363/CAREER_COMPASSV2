@@ -1,0 +1,168 @@
+// ============================================
+// CAREER COMPASS - Unified Theme Variables
+// ============================================
+
+// Core Background Colors (Unified Dark Theme)
+$bg-primary: #0a0a14;         // Main background
+$bg-secondary: #10101c;       // Secondary/elevated background
+$bg-elevated: #161625;        // Cards, modals
+$bg-surface: #1c1c2e;         // Surface elements
+
+// Glass Effect Variables
+$glass-bg: rgba(255, 255, 255, 0.02);
+$glass-border: rgba(255, 255, 255, 0.06);
+$glass-highlight: rgba(255, 255, 255, 0.1);
+$glass-shadow: rgba(0, 0, 0, 0.3);
+
+// Primary Accent (Indigo/Violet - Professional & Modern)
+$accent-primary: #6366f1;     // Main accent
+$accent-secondary: #8b5cf6;   // Secondary accent
+$accent-light: #a5b4fc;       // Light variant
+
+// Semantic Colors
+$accent-success: #10b981;     // Success/positive
+$accent-warning: #f59e0b;     // Warning/attention
+$accent-danger: #ef4444;      // Error/danger
+$accent-info: #3b82f6;        // Information
+$accent-rose: #f43f5e;        // Logout/destructive actions
+
+// Additional Accents
+$accent-teal: #14b8a6;
+$accent-cyan: #06b6d4;
+$accent-sky: #0ea5e9;
+
+// Text Colors
+$text-primary: rgba(255, 255, 255, 0.95);
+$text-secondary: rgba(255, 255, 255, 0.6);
+$text-muted: rgba(255, 255, 255, 0.4);
+$text-disabled: rgba(255, 255, 255, 0.25);
+
+// Border Radius
+$radius-xs: 6px;
+$radius-sm: 10px;
+$radius-md: 14px;
+$radius-lg: 20px;
+$radius-xl: 28px;
+$radius-full: 9999px;
+
+// Transitions
+$transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+$transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+$transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+// Shadows
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+$shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.3);
+$shadow-glow: 0 0 40px rgba($accent-primary, 0.15);
+
+// Z-Index Scale
+$z-dropdown: 100;
+$z-sticky: 200;
+$z-fixed: 500;
+$z-modal-backdrop: 900;
+$z-modal: 1000;
+$z-tooltip: 1100;
+
+// Spacing
+$space-1: 0.25rem;   // 4px
+$space-2: 0.5rem;    // 8px
+$space-3: 0.75rem;   // 12px
+$space-4: 1rem;      // 16px
+$space-5: 1.25rem;   // 20px
+$space-6: 1.5rem;    // 24px
+$space-8: 2rem;      // 32px
+$space-10: 2.5rem;   // 40px
+$space-12: 3rem;     // 48px
+$space-16: 4rem;     // 64px
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// Mixins
+@mixin glass-effect {
+  background: $glass-bg;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid $glass-border;
+}
+
+@mixin gradient-text {
+  background: linear-gradient(135deg, #fff 0%, $accent-light 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin accent-gradient {
+  background: linear-gradient(135deg, $accent-primary, $accent-secondary);
+}
+
+@mixin hover-lift {
+  transition: transform 0.2s $transition-smooth, box-shadow 0.2s $transition-smooth;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+@mixin focus-ring {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($accent-primary, 0.3);
+  }
+}
+
+// Animation Keyframes
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba($accent-primary, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba($accent-primary, 0.5); 
+  }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}

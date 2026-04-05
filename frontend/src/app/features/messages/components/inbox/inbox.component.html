@@ -1,0 +1,159 @@
+<div class="messages-container">
+  
+  <!-- Animated Background -->
+  <div class="bg-effects">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="noise-overlay"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    
+    <!-- Glass Header -->
+    <header class="inbox-header">
+      <div class="header-content">
+        <div class="header-left">
+          <button (click)="goBack()" class="back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <div class="header-title-group">
+            <span class="breadcrumb">Dashboard / Messages</span>
+            <h1 class="page-title">
+              <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+              </svg>
+              Messages
+            </h1>
+          </div>
+        </div>
+        
+        <div class="header-right">
+          <div *ngIf="getTotalUnread() > 0" class="unread-chip">
+            <span class="pulse-dot"></span>
+            {{ getTotalUnread() }} unread
+          </div>
+        </div>
+      </div>
+      
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="text" 
+                 placeholder="Search conversations..." 
+                 class="search-input"
+                 [(ngModel)]="searchQuery"
+                 (input)="filterConversations()">
+        </div>
+      </div>
+    </header>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="loading-text">Loading conversations...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && conversations.length === 0" class="empty-state">
+      <div class="empty-illustration">
+        <div class="empty-icon-wrapper">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+          </svg>
+          <div class="empty-icon-glow"></div>
+        </div>
+        <div class="floating-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <h3 class="empty-title">No conversations yet</h3>
+      <p class="empty-description">
+        {{ currentUser?.role === 'MENTOR' 
+           ? 'Students will be able to send you messages when they visit your profile.' 
+           : 'Start a conversation by visiting a mentor\'s profile and sending a message.' }}
+      </p>
+      <a *ngIf="currentUser?.role === 'STUDENT'" routerLink="/mentorship/mentors" class="empty-cta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Browse Mentors
+      </a>
+    </div>
+
+    <!-- Conversations List -->
+    <div *ngIf="!isLoading && filteredConversations.length > 0" class="conversations-list">
+      
+      <div *ngFor="let conversation of filteredConversations; let i = index" 
+           (click)="openConversation(conversation.user.id)"
+           class="conversation-card"
+           [class.has-unread]="conversation.unreadCount > 0"
+           [style.animation-delay]="i * 50 + 'ms'">
+        
+        <!-- Avatar with status -->
+        <div class="avatar-container">
+          <div class="avatar" [style.background]="getAvatarGradient(conversation.user.name)">
+            {{ conversation.user.name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="status-indicator online"></div>
+        </div>
+        
+        <!-- Content -->
+        <div class="conversation-content">
+          <div class="conversation-header">
+            <div class="user-info">
+              <h3 class="user-name">{{ conversation.user.name }}</h3>
+              <span class="role-badge" [attr.data-role]="conversation.user.role.toLowerCase()">
+                {{ conversation.user.role }}
+              </span>
+            </div>
+            <span class="timestamp">{{ getTimeAgo(conversation.lastMessage.createdAt) }}</span>
+          </div>
+          
+          <p class="last-message" [class.unread]="conversation.unreadCount > 0">
+            <span *ngIf="conversation.lastMessage.senderId === currentUser?.id" class="you-prefix">You: </span>
+            {{ conversation.lastMessage.content }}
+          </p>
+        </div>
+        
+        <!-- Right section -->
+        <div class="conversation-meta">
+          <div *ngIf="conversation.unreadCount > 0" class="unread-badge">
+            {{ conversation.unreadCount > 99 ? '99+' : conversation.unreadCount }}
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>
+        
+        <!-- Hover effect -->
+        <div class="card-glow"></div>
+      </div>
+      
+    </div>
+
+    <!-- No search results -->
+    <div *ngIf="!isLoading && conversations.length > 0 && filteredConversations.length === 0" class="no-results">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+      </svg>
+      <p>No conversations match "{{ searchQuery }}"</p>
+    </div>
+
+  </div>
+</div>

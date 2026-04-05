@@ -1,0 +1,58 @@
+.admin-container {
+    @apply min-h-screen relative overflow-hidden bg-gray-950 text-white;
+}
+
+.animated-bg {
+    @apply absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-20;
+}
+
+.gradient-orb {
+  @apply absolute rounded-full blur-[100px] animate-pulse mix-blend-screen;
+    width: 600px;
+    height: 600px;
+}
+
+.orb-1 {
+    @apply bg-indigo-600/30;
+    top: -200px;
+    left: -200px;
+}
+
+.orb-2 {
+    @apply bg-purple-600/30;
+    bottom: -200px;
+    right: -200px;
+    animation-delay: 2s;
+}
+
+.admin-content {
+    @apply relative z-10 p-8 max-w-7xl mx-auto;
+}
+
+.page-header {
+    @apply mb-8 relative;
+}
+
+.page-title {
+    @apply text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400;
+}
+
+.page-subtitle {
+    @apply text-gray-400 mt-2;
+}
+
+.back-btn {
+    @apply flex items-center gap-2 text-gray-400 hover:text-white transition-colors cursor-pointer mb-4;
+}
+
+.info-card {
+    @apply bg-gray-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-6 transition-all duration-300;
+}
+
+.card-title {
+    @apply text-xl font-semibold mb-4 text-white;
+}
+
+.spinner {
+    @apply w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin;
+}

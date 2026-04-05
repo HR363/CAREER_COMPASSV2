@@ -1,0 +1,121 @@
+<div class="mentors-container">
+  <!-- Navigation -->
+  <nav class="mentors-nav">
+    <div class="nav-content">
+      <div class="nav-left">
+        <button (click)="goBack()" class="back-btn">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="nav-title">👨‍🏫 Browse Mentors</h1>
+      </div>
+      <div class="nav-right">
+        <span class="user-name">{{ currentUser?.name }}</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="mentors-content">
+    <!-- Filters Section -->
+    <div class="filters-section">
+      <div class="filter-card">
+        <h3 class="filter-title">🔍 Search & Filter</h3>
+        
+        <div class="filter-group">
+          <label class="filter-label">Search Mentors</label>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="filterMentors()"
+            placeholder="Search by name or education..."
+            class="filter-input"
+          />
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Filter by Skill</label>
+          <select 
+            [(ngModel)]="selectedSkill"
+            (ngModelChange)="filterMentors()"
+            class="filter-select"
+          >
+            <option value="">All Skills</option>
+            <option *ngFor="let skill of allSkills" [value]="skill">{{ skill }}</option>
+          </select>
+        </div>
+
+        <div class="filter-stats">
+          <span class="stat-text">Showing {{ filteredMentors.length }} of {{ mentors.length }} mentors</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mentors Grid -->
+    <div class="mentors-section">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading mentors...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && filteredMentors.length === 0" class="empty-state">
+        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+        <h3>No mentors found</h3>
+        <p>Try adjusting your search or filter criteria</p>
+      </div>
+
+      <!-- Mentors Grid -->
+      <div *ngIf="!isLoading && filteredMentors.length > 0" class="mentors-grid">
+        <div *ngFor="let mentor of filteredMentors" class="mentor-card" (click)="viewMentorProfile(mentor.id)">
+          <!-- Avatar -->
+          <div class="mentor-avatar">
+            <span class="avatar-text">{{ mentor.name.charAt(0).toUpperCase() }}</span>
+          </div>
+
+          <!-- Info -->
+          <div class="mentor-info">
+            <h3 class="mentor-name">{{ mentor.name }}</h3>
+            <p class="mentor-education">{{ mentor.profile?.education || 'No education listed' }}</p>
+          </div>
+
+          <!-- Skills -->
+          <div class="mentor-skills" *ngIf="parseSkills(mentor.profile?.skills).length > 0">
+            <span *ngFor="let skill of parseSkills(mentor.profile?.skills).slice(0, 3)" class="skill-tag">
+              {{ skill }}
+            </span>
+            <span *ngIf="parseSkills(mentor.profile?.skills).length > 3" class="skill-more">
+              +{{ parseSkills(mentor.profile?.skills).length - 3 }} more
+            </span>
+          </div>
+
+          <!-- Stats -->
+          <div class="mentor-stats">
+            <div class="stat-item">
+              <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+              <span>{{ getResourceCount(mentor) }} Resources</span>
+            </div>
+          </div>
+
+          <!-- Action -->
+          <div class="mentor-action">
+            <button class="view-profile-btn">
+              View Profile
+              <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

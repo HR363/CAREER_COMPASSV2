@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("STUDENT")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profile           Profile?
+  recommendations   Recommendation[]
+  resources         Resource[]
+  mentorSessions    Session[]          @relation("MentorSessions")
+  studentSessions   Session[]          @relation("StudentSessions")
+  sentMessages      Message[]          @relation("SentMessages")
+  receivedMessages  Message[]          @relation("ReceivedMessages")
+  mentorApplication MentorApplication?
+
+  @@map("users")
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  education String?
+  skills    String? // JSON string
+  interests String? // JSON string
+  goals     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Recommendation {
+  id               String   @id @default(cuid())
+  userId           String
+  suggestedCareers String?  @db.NVarChar(Max) // JSON string
+  learningPath     String?  @db.NVarChar(Max) // JSON string
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("recommendations")
+}
+
+model Resource {
+  id        String   @id @default(cuid())
+  mentorId  String
+  title     String
+  link      String
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  mentor User @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+
+  @@map("resources")
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  mentorId    String
+  studentId   String
+  scheduledAt DateTime
+  status      String   @default("SCHEDULED")
+  roomId      String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  mentor  User @relation("MentorSessions", fields: [mentorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  student User @relation("StudentSessions", fields: [studentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("sessions")
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("messages")
+}
+
+// Enums converted to strings for SQL Server compatibility
+// UserRole: "ADMIN" | "MENTOR" | "STUDENT"
+// SessionStatus: "SCHEDULED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED"
+// ApplicationStatus: "PENDING" | "APPROVED" | "REJECTED"
+
+model MentorApplication {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  status    String   @default("PENDING")
+  reason    String
+  resumeUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("mentor_applications")
+}

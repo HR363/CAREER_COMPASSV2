@@ -1,0 +1,148 @@
+<div class="mentorship-container">
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="mentorship-nav">
+    <div class="nav-content">
+      <div class="nav-left">
+        <button (click)="goBack()" class="back-btn">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="nav-title">🎓 Mentorship</h1>
+      </div>
+      <div class="nav-right">
+        <span class="user-name">{{ currentUser?.name }}</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="mentorship-content">
+    
+    <!-- Browse Mentors Button (for students) -->
+    <div *ngIf="currentUser?.role === 'STUDENT'" class="browse-mentors-card" style="grid-column: 1 / -1; margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 1rem;">
+        <div>
+          <h3 style="color: white; margin: 0 0 0.25rem 0; font-size: 1.1rem;">👨‍🏫 Looking for a mentor?</h3>
+          <p style="color: #94a3b8; margin: 0; font-size: 0.9rem;">Browse through our mentors, view their profiles, and connect directly.</p>
+        </div>
+        <button (click)="browseMentors()" style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border: none; border-radius: 0.75rem; color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease;">
+          Browse Mentors
+          <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- AI Recommended Mentors -->
+    <div *ngIf="currentUser?.role === 'STUDENT' && recommendedMentors.length > 0" class="schedule-card mb-8" style="margin-bottom: 2rem;">
+      <h2 class="card-title">✨ AI Recommended Mentors</h2>
+      <div *ngIf="isLoadingRecommendations" class="py-4 text-center text-gray-400">
+        Finding the best mentors for you...
+      </div>
+      <div *ngIf="!isLoadingRecommendations" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <div *ngFor="let rec of recommendedMentors" class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/50 transition-all cursor-pointer group"
+             style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 1rem; cursor: pointer;"
+             (click)="scheduleForm.patchValue({mentorId: rec.mentorId})">
+           <div class="flex justify-between items-start mb-3" style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+             <h3 class="text-lg font-semibold text-white" style="color: white; font-weight: 600;">{{ rec.mentorName }}</h3>
+             <span class="px-2 py-1 text-xs font-bold rounded-full bg-indigo-500/20 text-indigo-300" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem;">
+               {{ rec.matchScore }}% Match
+             </span>
+           </div>
+           <p class="text-sm text-gray-400 mb-4" style="color: #94a3b8; font-size: 0.875rem; margin-bottom: 1rem;">{{ rec.reasoning }}</p>
+           <div class="text-xs text-indigo-400 font-medium" style="color: #818cf8;">Click to auto-select for scheduling</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule New Session (for students) -->
+    <div *ngIf="currentUser?.role === 'STUDENT'" class="schedule-card">
+      <h2 class="card-title">📅 Schedule New Session</h2>
+      <form [formGroup]="scheduleForm" (ngSubmit)="scheduleSession()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Select Mentor</label>
+            <select formControlName="mentorId" class="form-select">
+              <option value="">Choose a mentor</option>
+              <option *ngFor="let mentor of mentors" [value]="mentor.id">
+                {{ mentor.name }} - {{ mentor.profile?.education }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date & Time</label>
+            <input type="datetime-local" formControlName="scheduledAt" class="form-input">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description (Optional)</label>
+          <textarea formControlName="description" rows="3" class="form-textarea" 
+                    placeholder="Describe what you'd like to discuss..."></textarea>
+        </div>
+        <button type="submit" [disabled]="scheduleForm.invalid || isScheduling"
+                class="btn-primary">
+          <span *ngIf="isScheduling" class="spinner"></span>
+          {{ isScheduling ? 'Scheduling...' : 'Schedule Session' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Sessions List -->
+    <div class="sessions-card">
+      <h2 class="card-title">📚 Your Sessions</h2>
+      
+      <div *ngIf="sessions.length === 0" class="empty-state">
+        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        <p>No sessions found. Schedule your first session to get started!</p>
+      </div>
+
+      <div class="sessions-list">
+        <div *ngFor="let session of sessions" class="session-item">
+          <div class="session-info">
+            <div class="session-header">
+              <h3 class="session-title">{{ getSessionTitle(session) }}</h3>
+              <span class="status-badge" [ngClass]="'status-' + session.status">
+                {{ session.status }}
+              </span>
+            </div>
+            <p class="session-date">
+              {{ session.scheduledAt | date:'MMM dd, yyyy h:mm a' }}
+            </p>
+            <p class="session-participant">
+              <span *ngIf="currentUser?.role === 'STUDENT'">
+                Mentor: {{ session.mentor?.name }}
+              </span>
+              <span *ngIf="currentUser?.role === 'MENTOR'">
+                Student: {{ session.student?.name }}
+              </span>
+            </p>
+          </div>
+          
+          <div class="session-actions">
+            <button *ngIf="canJoinSession(session)" 
+                    (click)="joinSession(session)"
+                    class="btn-join">
+              Join Session
+            </button>
+            <button *ngIf="canCancelSession(session)" 
+                    (click)="cancelSession(session)"
+                    class="btn-cancel">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
