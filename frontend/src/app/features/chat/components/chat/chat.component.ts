@@ -43,7 +43,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    this.scrollToBottom();
+    // No longer auto-scrolling on every view check, only on new messages
   }
 
   sendMessage(): void {

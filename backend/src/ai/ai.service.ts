@@ -126,6 +126,39 @@ export class AiService {
     }
   }
 
+  async groupPendingRequests(mentorId: string) {
+    try {
+      const requests = await this.prisma.sessionRequest.findMany({
+        where: { mentorId, status: 'PENDING' },
+        include: {
+          student: { select: { name: true } },
+        },
+      });
+
+      if (requests.length === 0) {
+        return [];
+      }
+
+      if (requests.length === 1) {
+        return [
+          {
+            topic: requests[0].topic,
+            requestIds: [requests[0].id],
+            students: [requests[0].student.name],
+          }
+        ];
+      }
+
+      const { system, user } = this.buildGroupRequestsPrompt(requests);
+      const response = await this.callGeminiAPI(user, system, true);
+
+      return Array.isArray(response) ? response : [];
+    } catch (error) {
+      console.error('Error grouping pending requests:', error);
+      throw new Error('Failed to group pending requests');
+    }
+  }
+
   // --- Prompt Builders (Now returning distinct System and User parts) ---
 
   private buildCareerRecommendationPrompt(dto: CareerRecommendationDto) {
@@ -187,6 +220,24 @@ export class AiService {
       user: context 
         ? `User context: ${JSON.stringify(context)}\n\nUser message: ${message}`
         : `User message: ${message}`
+    };
+  }
+
+  private buildGroupRequestsPrompt(requests: any[]) {
+    const requestDetails = requests.map(req => ({
+      id: req.id,
+      topic: req.topic,
+      description: req.description || '',
+      studentName: req.student.name,
+    }));
+
+    return {
+      system: `You are an expert AI coordinator. Your job is to group pending session requests into suitable group mentorship sessions based on topic similarity and intent.
+      Return the result strictly as a JSON array of objects. Each object should represent a suggested group session and have:
+      - "topic": "A summarized overarching topic for the group"
+      - "requestIds": ["array of exactly matched request ids"]
+      - "students": ["array of corresponding student names"]`,
+      user: `Here are the pending requests:\n${JSON.stringify(requestDetails)}`
     };
   }
 

@@ -5,8 +5,8 @@ $border-subtle: rgba(255, 255, 255, 0.06);
 $text-primary: #ffffff;
 $text-secondary: #a1a1aa;
 $text-muted: #52525b;
-$accent-indigo: #6366f1;
-$accent-purple: #a855f7;
+$accent-green: #22c55e;
+$accent-green: #22c55e;
 $accent-pink: #ec4899;
 $accent-cyan: #22d3ee;
 $accent-emerald: #10b981;
@@ -39,7 +39,7 @@ $accent-emerald: #10b981;
   &.orb-1 {
     width: 600px;
     height: 600px;
-    background: linear-gradient(135deg, rgba($accent-indigo, 0.15), rgba($accent-purple, 0.1));
+    background: linear-gradient(135deg, rgba($accent-green, 0.15), rgba($accent-green, 0.1));
     top: -20%;
     left: -10%;
   }
@@ -47,7 +47,7 @@ $accent-emerald: #10b981;
   &.orb-2 {
     width: 500px;
     height: 500px;
-    background: linear-gradient(135deg, rgba($accent-purple, 0.12), rgba($accent-pink, 0.08));
+    background: linear-gradient(135deg, rgba($accent-green, 0.12), rgba($accent-pink, 0.08));
     bottom: -15%;
     right: -10%;
     animation-delay: -7s;
@@ -163,7 +163,7 @@ $accent-emerald: #10b981;
     .title-icon {
       width: 28px;
       height: 28px;
-      color: $accent-indigo;
+      color: $accent-green;
       -webkit-text-fill-color: initial;
     }
   }
@@ -175,17 +175,17 @@ $accent-emerald: #10b981;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: rgba($accent-indigo, 0.15);
-    border: 1px solid rgba($accent-indigo, 0.25);
+    background: rgba($accent-green, 0.15);
+    border: 1px solid rgba($accent-green, 0.25);
     border-radius: 100px;
     font-size: 0.8rem;
     font-weight: 600;
-    color: lighten($accent-indigo, 15%);
+    color: lighten($accent-green, 15%);
     
     .pulse-dot {
       width: 8px;
       height: 8px;
-      background: $accent-indigo;
+      background: $accent-green;
       border-radius: 50%;
       animation: pulse 2s ease-in-out infinite;
     }
@@ -229,8 +229,8 @@ $accent-emerald: #10b981;
       
       &:focus {
         outline: none;
-        border-color: rgba($accent-indigo, 0.5);
-        box-shadow: 0 0 0 3px rgba($accent-indigo, 0.1);
+        border-color: rgba($accent-green, 0.5);
+        box-shadow: 0 0 0 3px rgba($accent-green, 0.1);
         background: rgba(255, 255, 255, 0.03);
       }
     }
@@ -260,12 +260,12 @@ $accent-emerald: #10b981;
     animation: spin 1.5s linear infinite;
     
     &:nth-child(1) {
-      border-top-color: $accent-indigo;
+      border-top-color: $accent-green;
       animation-delay: 0s;
     }
     &:nth-child(2) {
       inset: 5px;
-      border-right-color: $accent-purple;
+      border-right-color: $accent-green;
       animation-delay: 0.15s;
       animation-direction: reverse;
     }
@@ -314,7 +314,7 @@ $accent-emerald: #10b981;
   .empty-icon {
     width: 50px;
     height: 50px;
-    color: $accent-indigo;
+    color: $accent-green;
     position: relative;
     z-index: 1;
   }
@@ -322,7 +322,7 @@ $accent-emerald: #10b981;
   .empty-icon-glow {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle, rgba($accent-indigo, 0.2), transparent 70%);
+    background: radial-gradient(circle, rgba($accent-green, 0.2), transparent 70%);
     border-radius: 50%;
     animation: glow-pulse 3s ease-in-out infinite;
   }
@@ -378,14 +378,14 @@ $accent-emerald: #10b981;
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, $accent-indigo, $accent-purple);
+  background: linear-gradient(135deg, $accent-green, $accent-green);
   border-radius: 12px;
   font-size: 0.875rem;
   font-weight: 600;
   color: $text-primary;
   text-decoration: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba($accent-indigo, 0.3);
+  box-shadow: 0 4px 20px rgba($accent-green, 0.3);
   
   svg {
     width: 18px;
@@ -394,7 +394,7 @@ $accent-emerald: #10b981;
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba($accent-indigo, 0.4);
+    box-shadow: 0 6px 30px rgba($accent-green, 0.4);
   }
 }
 
@@ -435,10 +435,10 @@ $accent-emerald: #10b981;
   }
   
   &.has-unread {
-    border-left: 3px solid $accent-indigo;
+    border-left: 3px solid $accent-green;
     
     .card-glow {
-      background: linear-gradient(90deg, rgba($accent-indigo, 0.1), transparent);
+      background: linear-gradient(90deg, rgba($accent-green, 0.1), transparent);
     }
   }
 }
@@ -536,9 +536,9 @@ $accent-emerald: #10b981;
   }
   
   &[data-role="student"] {
-    background: rgba($accent-indigo, 0.15);
-    color: lighten($accent-indigo, 15%);
-    border: 1px solid rgba($accent-indigo, 0.25);
+    background: rgba($accent-green, 0.15);
+    color: lighten($accent-green, 15%);
+    border: 1px solid rgba($accent-green, 0.25);
   }
   
   &[data-role="admin"] {
@@ -584,14 +584,14 @@ $accent-emerald: #10b981;
   height: 24px;
   padding: 0 7px;
   border-radius: 12px;
-  background: linear-gradient(135deg, $accent-indigo, $accent-purple);
+  background: linear-gradient(135deg, $accent-green, $accent-green);
   font-size: 0.7rem;
   font-weight: 700;
   color: $text-primary;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 10px rgba($accent-indigo, 0.4);
+  box-shadow: 0 2px 10px rgba($accent-green, 0.4);
 }
 
 .chevron-icon {
@@ -620,3 +620,5 @@ $accent-emerald: #10b981;
     font-size: 0.9rem;
   }
 }
+
+

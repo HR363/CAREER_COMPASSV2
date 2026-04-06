@@ -72,10 +72,15 @@ export class MentorshipGateway implements OnGatewayConnection, OnGatewayDisconne
     // Verify user has access to this room
     const session = await this.prisma.session.findUnique({
       where: { roomId },
-      select: { mentorId: true, studentId: true, status: true },
+      select: { mentorId: true, attendees: { select: { id: true } }, status: true },
     });
 
-    if (!session || (session.mentorId !== user.id && session.studentId !== user.id)) {
+    if (!session) {
+      return { error: 'Room not found' };
+    }
+
+    const isAttendee = session.attendees.some(a => a.id === user.id);
+    if (session.mentorId !== user.id && !isAttendee) {
       return { error: 'Access denied to this room' };
     }
 

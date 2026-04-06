@@ -261,7 +261,7 @@
   <div *ngIf="showScheduleModal" class="modal-overlay" (click)="closeScheduleModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>📅 Schedule Session with {{ mentor?.name }}</h3>
+        <h3>Request Session with {{ mentor?.name }}</h3>
         <button class="close-btn" (click)="closeScheduleModal()">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -270,13 +270,13 @@
       </div>
       <form [formGroup]="scheduleForm" (ngSubmit)="scheduleSession()">
         <div class="form-group">
-          <label class="form-label">Select Date & Time</label>
-          <input type="datetime-local" formControlName="scheduledAt" class="form-input" />
+          <label class="form-label">Topic of Interest</label>
+          <input type="text" formControlName="topic" class="form-input" placeholder="e.g. Resume Review, React Architecture" />
         </div>
         <div class="form-group">
           <label class="form-label">Description (Optional)</label>
-          <textarea 
-            formControlName="description" 
+          <textarea
+            formControlName="description"
             rows="3" 
             class="form-textarea"
             placeholder="What would you like to discuss?"></textarea>
@@ -285,7 +285,7 @@
           <button type="button" class="btn-cancel" (click)="closeScheduleModal()">Cancel</button>
           <button type="submit" class="btn-confirm" [disabled]="scheduleForm.invalid || isScheduling">
             <span *ngIf="isScheduling" class="loading-spinner tiny"></span>
-            {{ isScheduling ? 'Scheduling...' : 'Schedule Session' }}
+            {{ isScheduling ? 'Requesting...' : 'Request Session' }}
           </button>
         </div>
       </form>

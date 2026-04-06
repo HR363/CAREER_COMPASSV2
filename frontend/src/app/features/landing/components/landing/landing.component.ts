@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -20,6 +20,10 @@ interface FloatingIcon {
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('journeySection') journeySection?: ElementRef<HTMLElement>;
+  @ViewChild('journeyViewport') journeyViewport?: ElementRef<HTMLDivElement>;
+  @ViewChild('journeyRail') journeyRail?: ElementRef<HTMLDivElement>;
+
   // Mouse tracking
   mouseX = 0;
   mouseY = 0;
@@ -35,6 +39,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   // Journey steps tracking
   activeStep = 0;
   stepsProgress = 0;
+  journeyTranslate = 0;
+  journeyScrollSpan = 0;
+  journeySectionHeight = 1200;
   
   // Journey steps data
   journeySteps = [
@@ -67,16 +74,34 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   // Animation frame ID
   private animationFrameId: number | null = null;
   private observer: IntersectionObserver | null = null;
+  private wheelLockHandler?: (event: WheelEvent) => void;
+  private isWheelLockActive = false;
 
-  // Tech icons for floating background
-  private techIcons = ['⚡', '🎯', '💡', '🚀', '✨', '🔮', '💫', '🌟', '⭐', '🎓', '📊', '🤖', '💻', '🔑', '🎨'];
+  // Neural constellation glyphs for floating background
+  private techIcons = [
+    'o---o',
+    'o--o--o',
+    'o-+-o',
+    'o\\|/o',
+    'o/|\\o',
+    'o<>o',
+    'o==o',
+    'o...o',
+    '*-o-*',
+    'o->o',
+    'o<-o',
+    'o-x-o',
+    'o~o~o',
+    'o:o:o',
+    'o_o_o'
+  ];
   
   features = [
     {
       icon: '🎯',
       title: 'AI-Powered Insights', 
       description: 'Leverage cutting-edge AI technology to discover career paths tailored to your unique skills and aspirations',
-      gradient: 'from-purple-500 to-pink-500',
+      gradient: 'from-green-500 to-pink-500',
       image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=80'
     },
     {
@@ -99,37 +124,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       description: 'Get instant, intelligent answers to your career questions anytime, anywhere',
       gradient: 'from-orange-500 to-red-500',
       image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&auto=format&fit=crop&q=80'
-    }
-  ];
-
-  stats = [
-    { value: '10K+', label: 'Active Users', icon: '👥' },
-    { value: '500+', label: 'Expert Mentors', icon: '🎓' },
-    { value: '95%', label: 'Success Rate', icon: '⭐' },
-    { value: '24/7', label: 'AI Support', icon: '🤖' }
-  ];
-
-  testimonials = [
-    {
-      name: 'Sarah Johnson',
-      role: 'Software Engineer',
-      avatar: '👩‍💻',
-      content: 'CareerCompass helped me transition from teaching to tech. The AI recommendations were spot-on!',
-      rating: 5
-    },
-    {
-      name: 'Michael Chen',
-      role: 'Product Manager',
-      avatar: '👨‍💼',
-      content: 'The mentorship sessions were invaluable. I landed my dream job within 3 months!',
-      rating: 5
-    },
-    {
-      name: 'Emily Rodriguez',
-      role: 'Data Scientist',
-      avatar: '👩‍🔬',
-      content: 'Best career platform I\'ve used. The learning paths are perfectly structured.',
-      rating: 5
     }
   ];
 
@@ -156,70 +150,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   ];
 
-  private allArticles = [
-    {
-      title: 'The Future of AI in Software Development',
-      excerpt: 'How artificial intelligence is reshaping the coding landscape and what you need to learn to stay ahead.',
-      author: 'Dr. Sarah Chen',
-      role: 'Staff Engineer at Google',
-      date: 'Jan 15, 2026',
-      readTime: '5 min read',
-      image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&auto=format&fit=crop&q=80',
-      tags: ['AI', 'Career Growth']
-    },
-    {
-      title: 'Mastering System Design Interviews',
-      excerpt: 'A comprehensive guide to cracking the toughest section of technical interviews at top tech companies.',
-      author: 'Michael Ross',
-      role: 'Principal Architect',
-      date: 'Jan 12, 2026',
-      readTime: '8 min read',
-      image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=80',
-      tags: ['Interviews', 'System Design']
-    },
-    {
-      title: 'Transitioning from Junior to Senior Dev',
-      excerpt: 'Key soft skills and technical milestones you need to hit to reach the next level in your engineering career.',
-      author: 'Emily Davis',
-      role: 'Engineering Manager',
-      date: 'Jan 10, 2026',
-      readTime: '6 min read',
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&auto=format&fit=crop&q=80',
-      tags: ['Career Advice', 'Leadership']
-    },
-    {
-      title: 'Remote Work: Strategies for Success',
-      excerpt: 'Learn how to stay productive, maintain work-life balance, and advance your career while working from anywhere.',
-      author: 'David Kim',
-      role: 'Remote Work Advocate',
-      date: 'Jan 05, 2026',
-      readTime: '4 min read',
-      image: 'https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=800&auto=format&fit=crop&q=80',
-      tags: ['Remote', 'Productivity']
-    }
-  ];
-
-  tags = ['All', 'AI & Tech', 'Career Growth', 'Interviews', 'Leadership', 'Remote Work'];
-  activeTag = 'All';
-
-  get articles() {
-    if (this.activeTag === 'All') return this.allArticles;
-    
-    return this.allArticles.filter(article => 
-      article.tags.some(tag => {
-        // Simple flexible matching
-        const normalize = (s: string) => s.toLowerCase();
-        const t = normalize(tag);
-        const f = normalize(this.activeTag);
-        return f.includes(t) || t.includes(f);
-      })
-    );
-  }
-
-  setActiveTag(tag: string) {
-    this.activeTag = tag;
-  }
-
   partners = ['Google', 'Microsoft', 'Amazon', 'Tesla', 'Netflix', 'Meta'];
 
   toggleFaq(index: number) {
@@ -233,6 +163,14 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     this.setupScrollObserver();
+    setTimeout(() => {
+      this.syncJourneyMeasurements();
+      this.updateJourneyProgress();
+    }, 0);
+
+    // Use a non-passive listener so we can prevent default wheel scrolling during horizontal lock.
+    this.wheelLockHandler = (event: WheelEvent) => this.handleJourneyWheel(event);
+    window.addEventListener('wheel', this.wheelLockHandler, { passive: false });
   }
 
   ngOnDestroy() {
@@ -241,6 +179,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.observer) {
       this.observer.disconnect();
+    }
+    if (this.wheelLockHandler) {
+      window.removeEventListener('wheel', this.wheelLockHandler);
     }
   }
 
@@ -253,42 +194,142 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   @HostListener('window:scroll')
   onScroll() {
     this.scrollY = window.scrollY;
+    if (this.isWheelLockActive) return;
+    this.updateJourneyProgress();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.syncJourneyMeasurements();
     this.updateJourneyProgress();
   }
 
   private updateJourneyProgress() {
-    const journeySection = document.querySelector('.how-it-works') as HTMLElement;
-    if (!journeySection) return;
+    if (this.journeyScrollSpan <= 0) {
+      this.syncJourneyMeasurements();
+    }
 
-    const rect = journeySection.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const sectionTop = rect.top;
-    const sectionHeight = rect.height;
-
-    // Calculate progress through the section (0 to 1)
-    const startTrigger = windowHeight * 0.8; // Start when section is 80% visible
-    const endTrigger = -sectionHeight * 0.5; // End halfway through section scroll
-    
-    if (sectionTop <= startTrigger && sectionTop >= endTrigger) {
-      const totalScroll = startTrigger - endTrigger;
-      const currentScroll = startTrigger - sectionTop;
-      this.stepsProgress = Math.min(100, Math.max(0, (currentScroll / totalScroll) * 100));
-      
-      // Determine active step based on progress
-      if (this.stepsProgress < 33) {
-        this.activeStep = 0;
-      } else if (this.stepsProgress < 66) {
-        this.activeStep = 1;
-      } else {
-        this.activeStep = 2;
-      }
-    } else if (sectionTop > startTrigger) {
+    const section = this.journeySection?.nativeElement;
+    if (!section || this.journeyScrollSpan <= 0) {
+      this.journeyTranslate = 0;
       this.stepsProgress = 0;
       this.activeStep = 0;
-    } else {
-      this.stepsProgress = 100;
-      this.activeStep = 2;
+      return;
     }
+
+    const stickyTop = window.innerHeight * 0.12;
+    const sectionTopOnPage = window.scrollY + section.getBoundingClientRect().top;
+    const startY = sectionTopOnPage - stickyTop;
+    const travel = window.scrollY - startY;
+    const clampedTravel = Math.min(this.journeyScrollSpan, Math.max(0, travel));
+    const ratio = Math.min(1, Math.max(0, clampedTravel / this.journeyScrollSpan));
+
+    this.journeyTranslate = ratio * this.journeyScrollSpan;
+    this.stepsProgress = ratio * 100;
+
+    const maxIndex = this.journeySteps.length - 1;
+    this.activeStep = Math.min(maxIndex, Math.max(0, Math.round(ratio * maxIndex)));
+  }
+
+  private syncJourneyMeasurements() {
+    const viewport = this.journeyViewport?.nativeElement;
+    const rail = this.journeyRail?.nativeElement;
+    if (!viewport || !rail) return;
+
+    const maxTranslate = Math.max(0, rail.scrollWidth - viewport.clientWidth);
+    this.journeyScrollSpan = maxTranslate;
+    this.journeySectionHeight = window.innerHeight + maxTranslate + window.innerHeight * 0.45;
+  }
+
+  private getJourneyLockRange(): { startY: number; endY: number } | null {
+    const section = this.journeySection?.nativeElement;
+    if (!section || this.journeyScrollSpan <= 0) return null;
+
+    const stickyTop = window.innerHeight * 0.12;
+    const sectionTopOnPage = window.scrollY + section.getBoundingClientRect().top;
+    const startY = sectionTopOnPage - stickyTop;
+    const endY = startY + this.journeyScrollSpan;
+    return { startY, endY };
+  }
+
+  private handleJourneyWheel(event: WheelEvent) {
+    const range = this.getJourneyLockRange();
+    if (!range) return;
+
+    const primaryDelta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+    if (primaryDelta === 0) return;
+
+    const currentY = window.scrollY;
+
+    const enteringFromTop =
+      primaryDelta > 0 && currentY < range.startY && currentY + primaryDelta >= range.startY;
+    const enteringFromBottom =
+      primaryDelta < 0 && currentY > range.endY && currentY + primaryDelta <= range.endY;
+
+    if (enteringFromTop) {
+      event.preventDefault();
+      this.isWheelLockActive = true;
+      this.applyJourneyTranslate(0);
+      window.scrollTo({ top: range.startY, behavior: 'auto' });
+      return;
+    }
+
+    if (enteringFromBottom) {
+      event.preventDefault();
+      this.isWheelLockActive = true;
+      this.applyJourneyTranslate(this.journeyScrollSpan);
+      window.scrollTo({ top: range.endY, behavior: 'auto' });
+      return;
+    }
+
+    const atEndAndMovingDown = this.journeyTranslate >= this.journeyScrollSpan - 0.5 && primaryDelta > 0;
+    const atStartAndMovingUp = this.journeyTranslate <= 0.5 && primaryDelta < 0;
+    if (atEndAndMovingDown || atStartAndMovingUp) {
+      this.isWheelLockActive = false;
+      return;
+    }
+
+    const inLockRange = currentY >= range.startY && currentY <= range.endY;
+    if (!inLockRange) return;
+
+    const nextTranslate = Math.min(this.journeyScrollSpan, Math.max(0, this.journeyTranslate + primaryDelta));
+    const reachedStart = nextTranslate <= 0;
+    const reachedEnd = nextTranslate >= this.journeyScrollSpan;
+
+    // Keep vertical position frozen while translating the horizontal rail.
+    if ((primaryDelta > 0 && !reachedEnd) || (primaryDelta < 0 && !reachedStart)) {
+      event.preventDefault();
+      this.isWheelLockActive = true;
+      this.applyJourneyTranslate(nextTranslate);
+      window.scrollTo({ top: currentY, behavior: 'auto' });
+      return;
+    }
+
+    // Clamp to the edge and release lock so natural vertical scroll resumes.
+    if (primaryDelta > 0 && reachedEnd) {
+      event.preventDefault();
+      this.applyJourneyTranslate(this.journeyScrollSpan);
+      this.isWheelLockActive = false;
+      window.scrollTo({ top: range.endY + 1, behavior: 'auto' });
+      return;
+    }
+
+    if (primaryDelta < 0 && reachedStart) {
+      event.preventDefault();
+      this.applyJourneyTranslate(0);
+      this.isWheelLockActive = false;
+      window.scrollTo({ top: Math.max(0, range.startY - 1), behavior: 'auto' });
+      return;
+    }
+  }
+
+  private applyJourneyTranslate(translate: number) {
+    const clamped = Math.min(this.journeyScrollSpan, Math.max(0, translate));
+    this.journeyTranslate = clamped;
+    const ratio = this.journeyScrollSpan > 0 ? clamped / this.journeyScrollSpan : 0;
+    this.stepsProgress = ratio * 100;
+    const maxIndex = this.journeySteps.length - 1;
+    this.activeStep = Math.min(maxIndex, Math.max(0, Math.round(ratio * maxIndex)));
   }
 
   isStepActive(index: number): boolean {
@@ -306,7 +347,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         icon: this.techIcons[Math.floor(Math.random() * this.techIcons.length)],
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: 16 + Math.random() * 24,
+        size: 15 + Math.random() * 14,
         speed: 0.5 + Math.random() * 1.5,
         delay: Math.random() * 5,
         opacity: 0.03 + Math.random() * 0.08
@@ -368,3 +409,4 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     return 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
   }
 }
+

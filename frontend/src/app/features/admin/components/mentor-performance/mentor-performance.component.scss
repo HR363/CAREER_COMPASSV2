@@ -13,13 +13,13 @@
 }
 
 .orb-1 {
-    @apply bg-indigo-600/30;
+    @apply bg-green-600/30;
     top: -200px;
     left: -200px;
 }
 
 .orb-2 {
-    @apply bg-purple-600/30;
+    @apply bg-green-600/30;
     bottom: -200px;
     right: -200px;
     animation-delay: 2s;
@@ -34,7 +34,7 @@
 }
 
 .page-title {
-    @apply text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400;
+    @apply text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-green-400;
 }
 
 .page-subtitle {
@@ -54,5 +54,6 @@
 }
 
 .spinner {
-    @apply w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin;
+    @apply w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin;
 }
+

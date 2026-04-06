@@ -14,9 +14,9 @@ $glass-border: rgba(255, 255, 255, 0.06);
 $glass-highlight: rgba(255, 255, 255, 0.1);
 $glass-shadow: rgba(0, 0, 0, 0.3);
 
-// Primary Accent (Indigo/Violet - Professional & Modern)
-$accent-primary: #6366f1;     // Main accent
-$accent-secondary: #8b5cf6;   // Secondary accent
+// Primary Accent (green/green - Professional & Modern)
+$accent-primary: #22c55e;     // Main accent
+$accent-secondary: #16a34a;   // Secondary accent
 $accent-light: #a5b4fc;       // Light variant
 
 // Semantic Colors
@@ -166,3 +166,4 @@ $breakpoint-2xl: 1536px;
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
+

@@ -63,8 +63,11 @@ export class AdminComponent implements OnInit {
     this.router.navigate(['/admin/performance']);
   }
 
+  navigateToUsers(): void {
+    this.router.navigate(['/admin/users']);
+  }
+
   ghostSession(sessionId: string): void {
       this.router.navigate(['/admin/sessions', sessionId, 'ghost']);
   }
 }
-

@@ -15,7 +15,7 @@
 }
 
 .shape-1 {
-  @apply bg-indigo-500;
+  @apply bg-green-500;
   width: 300px;
   height: 300px;
   top: -150px;
@@ -23,9 +23,10 @@
 }
 
 .shape-2 {
-  @apply bg-purple-500;
+  @apply bg-green-500;
   width: 200px;
   height: 200px;
   bottom: -100px;
   right: 200px;
 }
+

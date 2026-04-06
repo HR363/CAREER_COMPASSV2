@@ -38,13 +38,13 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
 
   // Avatar gradient colors
   private avatarGradients = [
-    'linear-gradient(135deg, #6366f1, #8b5cf6)',
+    'linear-gradient(135deg, #22c55e, #16a34a)',
     'linear-gradient(135deg, #ec4899, #f43f5e)',
     'linear-gradient(135deg, #14b8a6, #06b6d4)',
     'linear-gradient(135deg, #f59e0b, #f97316)',
-    'linear-gradient(135deg, #8b5cf6, #d946ef)',
+    'linear-gradient(135deg, #16a34a, #d946ef)',
     'linear-gradient(135deg, #10b981, #34d399)',
-    'linear-gradient(135deg, #3b82f6, #6366f1)',
+    'linear-gradient(135deg, #3b82f6, #22c55e)',
     'linear-gradient(135deg, #ef4444, #ec4899)',
   ];
 
@@ -248,3 +248,4 @@ export class ConversationComponent implements OnInit, OnDestroy, AfterViewChecke
     return this.otherUser?.name?.charAt(0).toUpperCase() || '?';
   }
 }
+

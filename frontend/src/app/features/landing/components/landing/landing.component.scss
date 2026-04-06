@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // LANDING PAGE - Immersive Experience
 // ============================================
 
@@ -75,8 +75,14 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
 .floating-icon {
   position: absolute;
   animation: floatIcon 20s ease-in-out infinite;
-  filter: blur(1px);
+  font-family: 'JetBrains Mono', 'Consolas', 'Fira Code', monospace;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba($accent-secondary, 0.45);
+  text-shadow: 0 0 10px rgba($accent-primary, 0.18);
+  filter: none;
   user-select: none;
+  white-space: nowrap;
 }
 
 @keyframes floatIcon {
@@ -311,7 +317,7 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
 .hero-orb-3 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(#a855f7, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(#22c55e, 0.1) 0%, transparent 70%);
   bottom: 10%;
   left: 20%;
   animation-delay: -10s;
@@ -693,7 +699,7 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
   z-index: 1;
 }
 
-.features-bento {
+.features-minimal-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
@@ -892,182 +898,98 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
 
 // Journey Container
 .journey-container {
-  max-width: 1100px;
+  max-width: 1300px;
   margin: 0 auto;
   position: relative;
-  padding: 4rem 0;
 }
 
-// Vertical Progress Track
+.journey-sticky {
+  position: sticky;
+  top: 12vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 .journey-progress-track {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(-50%);
-  border-radius: 4px;
+  position: relative;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
   overflow: hidden;
+  margin: 0 1.5rem;
   
   .journey-progress-fill {
     position: absolute;
-    top: 0;
+    inset: 0 auto 0 0;
+    height: 100%;
     left: 0;
-    width: 100%;
-    background: linear-gradient(180deg, $accent-primary, $accent-secondary);
-    border-radius: 4px;
-    transition: height 0.3s ease-out;
-  }
-  
-  .journey-progress-glow {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(circle, rgba($accent-primary, 0.8) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(8px);
-    transition: top 0.3s ease-out;
+    width: 0;
+    background: linear-gradient(90deg, $accent-primary, $accent-secondary);
+    border-radius: 999px;
+    transition: width 0.3s ease-out;
   }
 }
 
-// Journey Steps Container
+.journey-viewport {
+  overflow: hidden;
+  padding-left: 1.5rem;
+}
+
 .journey-steps {
   display: flex;
-  flex-direction: column;
-  gap: 6rem;
-  position: relative;
+  gap: 1.5rem;
+  width: max-content;
+  align-items: stretch;
+  will-change: transform;
 }
 
-// Individual Journey Step
 .journey-step {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 2rem;
-  align-items: center;
+  display: flex;
   position: relative;
+  flex: 0 0 min(74vw, 760px);
+  min-height: 400px;
+  max-height: 400px;
+  transition: none;
   
-  // Step Node (center connector)
-  .step-node {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    
-    .step-node-ring {
-      position: absolute;
-      inset: 0;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      transition: all 0.5s ease;
-    }
-    
-    .step-node-core {
-      width: 50px;
-      height: 50px;
-      background: $glass-bg;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.5s ease;
-      backdrop-filter: blur(10px);
-      
-      .step-node-number {
-        font-size: 1rem;
-        font-weight: 800;
-        color: $text-secondary;
-        transition: all 0.5s ease;
-      }
-    }
-    
-    .step-node-pulse {
-      position: absolute;
-      inset: -10px;
-      border: 2px solid rgba($accent-primary, 0);
-      border-radius: 50%;
-      opacity: 0;
-      transition: all 0.5s ease;
-    }
-  }
-  
-  // Step Content Wrapper
   .step-content-wrapper {
-    opacity: 0;
-    transform: translateX(-40px);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    &.left {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    
-    &.right {
-      grid-column: 3;
-      transform: translateX(40px);
-    }
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
   
-  // Active state
-  &.active {
-    .step-node {
-      .step-node-ring {
-        border-color: rgba($accent-primary, 0.3);
-        transform: scale(1.1);
-      }
-      
-      .step-node-core {
-        background: linear-gradient(135deg, $accent-primary, $accent-secondary);
-        border-color: transparent;
-        box-shadow: 0 0 30px rgba($accent-primary, 0.5);
-        
-        .step-node-number {
-          color: white;
-        }
-      }
-    }
-    
-    .step-content-wrapper {
-      opacity: 1;
-      transform: translateX(0);
-      
-      &.right {
-        transform: translateX(0);
-      }
-    }
-  }
-  
-  // Current state (extra emphasis)
   &.current {
-    .step-node {
-      .step-node-pulse {
-        animation: nodePulse 2s ease-out infinite;
-      }
-    }
-    
     .step-card-enhanced {
-      border-color: rgba($accent-primary, 0.3);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba($accent-primary, 0.15);
+      border-color: $glass-border;
+      box-shadow: none;
     }
   }
 }
 
-@keyframes nodePulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-    border-color: rgba($accent-primary, 0.6);
+.step-card-head {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+
+  .step-index {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.08em;
   }
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
-    border-color: rgba($accent-primary, 0);
+
+  .step-chip {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: $accent-primary;
+    background: rgba($accent-primary, 0.14);
+    border: 1px solid rgba($accent-primary, 0.22);
+    border-radius: 999px;
+    padding: 0.25rem 0.65rem;
   }
 }
 
@@ -1078,42 +1000,24 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid $glass-border;
   border-radius: 24px;
-  padding: 2rem;
+  padding: 1.4rem;
   position: relative;
   overflow: hidden;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    background: $glass-bg-hover;
-    border-color: $glass-border-hover;
-    transform: translateY(-5px);
-    
-    .step-card-shine {
-      left: 150%;
-    }
-    
-    .step-svg {
-      transform: scale(1.05);
-    }
-  }
-  
-  .step-card-shine {
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-    transition: left 0.8s ease;
-    pointer-events: none;
-  }
+  display: grid;
+  grid-template-columns: minmax(250px, 42%) 1fr;
+  gap: 1.2rem;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
 }
 
 // Step Graphic Section
 .step-graphic {
   width: 100%;
-  height: 150px;
-  margin-bottom: 1.5rem;
+  height: 240px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1124,7 +1028,7 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
   .step-svg {
     width: 100%;
     height: 100%;
-    transition: transform 0.5s ease;
+    transition: none;
   }
 }
 
@@ -1252,9 +1156,9 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
     gap: 0.75rem;
     font-size: 0.9rem;
     color: $text-secondary;
-    opacity: 0;
-    transform: translateX(-10px);
-    animation: featureReveal 0.5s ease-out forwards;
+    opacity: 1;
+    transform: none;
+    animation: none;
     
     .feature-check {
       display: flex;
@@ -1272,7 +1176,7 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
 .journey-step.active .step-feature-item {
-  animation: featureReveal 0.5s ease-out forwards;
+  animation: none;
 }
 
 @keyframes featureReveal {
@@ -2110,7 +2014,7 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
 // MOBILE RESPONSIVE
 // ============================================
 @media (max-width: 1024px) {
-  .features-bento {
+  .features-minimal-grid {
     grid-template-columns: 1fr;
     
     .feature-card.featured {
@@ -2180,7 +2084,7 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
     font-size: 1.75rem;
   }
   
-  .features-bento {
+  .features-minimal-grid {
     gap: 1rem;
     
     .feature-card.compact {
@@ -2194,59 +2098,58 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
   .how-it-works {
     padding: 4rem 1rem;
   }
-  
+
+  .journey-container {
+    height: auto;
+  }
+
+  .journey-sticky {
+    position: relative;
+    top: auto;
+  }
+
   .journey-progress-track {
-    left: 20px;
-    transform: none;
+    margin: 0 0.35rem;
+  }
+
+  .journey-viewport {
+    padding-left: 0.35rem;
+    overflow-x: auto;
   }
   
   .journey-steps {
-    gap: 3rem;
+    gap: 1rem;
+    width: auto;
+    min-width: max-content;
+    padding: 0.75rem 0.1rem 1.5rem;
+    transform: none !important;
   }
   
   .journey-step {
-    grid-template-columns: auto 1fr;
-    gap: 1rem;
-    
-    .step-node {
-      width: 50px;
-      height: 50px;
-      grid-row: 1;
-      
-      .step-node-core {
-        width: 40px;
-        height: 40px;
-        
-        .step-node-number {
-          font-size: 0.85rem;
-        }
-      }
-    }
-    
-    .step-content-wrapper {
-      grid-column: 2 !important;
-      grid-row: 1;
-      transform: translateX(0) !important;
-      
-      &.left, &.right {
-        transform: translateY(20px);
-      }
-    }
-    
-    &.active .step-content-wrapper {
-      &.left, &.right {
-        transform: translateY(0);
-      }
-    }
+    flex-basis: calc(100vw - 1.75rem);
+    min-height: 0;
+    max-height: none;
   }
   
   .step-card-enhanced {
-    padding: 1.5rem;
+    padding: 1.2rem;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    min-height: 0;
+    height: auto;
+  }
+
+  .step-card-head {
+    margin-bottom: 0;
+
+    .step-index,
+    .step-chip {
+      font-size: 0.75rem;
+    }
   }
   
   .step-graphic {
-    height: 120px;
-    margin-bottom: 1rem;
+    height: 145px;
   }
   
   .step-text-content {
@@ -2357,3 +2260,5 @@ $card-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.25);
     text-align: center;
   }
 }
+
+

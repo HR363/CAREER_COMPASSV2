@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
 import { MentorshipService } from './mentorship.service';
 import { ScheduleSessionDto } from './dto/schedule-session.dto';
+import { SessionRequestDto } from './dto/session-request.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -103,6 +104,21 @@ export class MentorshipController {
     return this.mentorshipService.deleteResource(user.id, resourceId);
   }
 
+  // ==================== REQUESTS ====================
+
+  @Post('requests')
+  async requestSession(
+    @Body() sessionRequestDto: SessionRequestDto,
+    @CurrentUser() user: any,
+  ) {
+    return this.mentorshipService.requestSession(user.id, sessionRequestDto);
+  }
+
+  @Get('requests')
+  async getRequests(@CurrentUser() user: any) {
+    return this.mentorshipService.getRequests(user.id, user.role);
+  }
+
   // ==================== SESSIONS ====================
 
   @Post('schedule')
@@ -110,7 +126,7 @@ export class MentorshipController {
     @Body() scheduleSessionDto: ScheduleSessionDto,
     @CurrentUser() user: any,
   ) {
-    return this.mentorshipService.scheduleSession(scheduleSessionDto);
+    return this.mentorshipService.scheduleSession(user.id, scheduleSessionDto);
   }
 
   @Get('sessions')

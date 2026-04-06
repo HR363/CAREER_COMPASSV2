@@ -151,7 +151,7 @@ export class AdminService {
         _count: {
           select: {
             mentorSessions: true,
-            studentSessions: true,
+            attendedSessions: true,
           },
         },
       },
@@ -171,7 +171,7 @@ export class AdminService {
             email: true,
           },
         },
-        student: {
+        attendees: {
           select: {
             id: true,
             name: true,

@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, User } from '../../../../core/services/auth.service';
-import { MentorshipService, Session } from '../../../../core/services/mentorship.service';
+import { MentorshipService, Session, SessionRequest } from '../../../../core/services/mentorship.service';
 import { AiService } from '../../../../core/services/ai.service';
 
 @Component({
   selector: 'app-mentorship',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './mentorship.component.html',
   styleUrls: ['./mentorship.component.scss']
 })
@@ -19,7 +19,13 @@ export class MentorshipComponent implements OnInit {
   mentors: any[] = [];
   recommendedMentors: any[] = [];
   isLoadingRecommendations = false;
-  
+
+  studentRequests: SessionRequest[] = [];
+
+  groupedRequests: any[] = [];
+  isLoadingGroupedRequests = false;
+  isAcceptingGroup = false;
+
   scheduleForm: FormGroup;
   isScheduling = false;
 
@@ -32,7 +38,7 @@ export class MentorshipComponent implements OnInit {
   ) {
     this.scheduleForm = this.fb.group({
       mentorId: ['', [Validators.required]],
-      scheduledAt: ['', [Validators.required]],
+      topic: ['', [Validators.required]],
       description: ['']
     });
   }
@@ -40,10 +46,13 @@ export class MentorshipComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.loadSessions();
-    
+
     if (this.currentUser?.role === 'STUDENT') {
       this.loadMentors();
       this.loadRecommendations();
+      this.loadStudentRequests();
+    } else if (this.currentUser?.role === 'MENTOR') {
+      this.loadGroupedRequests();
     }
   }
 
@@ -72,6 +81,17 @@ export class MentorshipComponent implements OnInit {
     });
   }
 
+  loadStudentRequests(): void {
+    this.mentorshipService.getRequests().subscribe({
+      next: (requests) => {
+        this.studentRequests = requests;
+      },
+      error: (error) => {
+        console.error('Error loading student requests:', error);
+      }
+    });
+  }
+
   loadMentors(): void {
     this.mentorshipService.getMentors().subscribe({
       next: (mentors) => {
@@ -83,30 +103,68 @@ export class MentorshipComponent implements OnInit {
     });
   }
 
-  scheduleSession(): void {
+  loadGroupedRequests(): void {
+    this.isLoadingGroupedRequests = true;
+    this.aiService.groupPendingRequests().subscribe({
+      next: (groups) => {
+        this.groupedRequests = groups.map(g => ({
+          ...g,
+          scheduledAt: ''
+        }));
+        this.isLoadingGroupedRequests = false;
+      },
+      error: (error) => {
+        console.error('Error loading grouped requests:', error);
+        this.isLoadingGroupedRequests = false;
+      }
+    });
+  }
+
+  requestSession(): void {
     if (this.scheduleForm.valid) {
       this.isScheduling = true;
-      
       const formData = this.scheduleForm.value;
-      const scheduleData = {
-        mentorId: formData.mentorId,
-        studentId: this.currentUser!.id,
-        scheduledAt: formData.scheduledAt,
-        description: formData.description
-      };
 
-      this.mentorshipService.scheduleSession(scheduleData).subscribe({
-        next: (session: any) => {
+      this.mentorshipService.requestSession({
+        mentorId: formData.mentorId,
+        topic: formData.topic,
+        description: formData.description
+      }).subscribe({
+        next: () => {
           this.isScheduling = false;
           this.scheduleForm.reset();
-          this.loadSessions();
+          this.loadStudentRequests();
         },
         error: (error: any) => {
           this.isScheduling = false;
-          console.error('Error scheduling session:', error);
+          console.error('Error requesting session:', error);
         }
       });
     }
+  }
+
+  acceptGroup(group: any): void {
+    if (!group.scheduledAt) {
+      alert('Please select a date and time for this session.');
+      return;
+    }
+
+    this.isAcceptingGroup = true;
+    this.mentorshipService.scheduleSession({
+      requestIds: group.requestIds,
+      topic: group.topic,
+      scheduledAt: group.scheduledAt
+    }).subscribe({
+      next: () => {
+        this.isAcceptingGroup = false;
+        this.loadSessions();
+        this.loadGroupedRequests();
+      },
+      error: (error) => {
+        this.isAcceptingGroup = false;
+        console.error('Error scheduling grouped session:', error);
+      }
+    });
   }
 
   joinSession(session: Session): void {
@@ -127,38 +185,41 @@ export class MentorshipComponent implements OnInit {
   }
 
   getSessionTitle(session: Session): string {
+    if (session.topic) return session.topic;
     if (this.currentUser?.role === 'STUDENT') {
-      return `Session with ${session.mentor?.name}`;
+      return 'Session with ' + session.mentor?.name;
     } else {
-      return `Session with ${session.student?.name}`;
+      return 'Mentorship Group Session';
     }
   }
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case 'SCHEDULED':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'IN_PROGRESS':
-        return 'bg-blue-100 text-blue-800';
-      case 'COMPLETED':
-        return 'bg-green-100 text-green-800';
-      case 'CANCELLED':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-secondary-100 text-secondary-800';
+      case 'SCHEDULED': return 'bg-yellow-100 text-yellow-800';
+      case 'IN_PROGRESS': return 'bg-blue-100 text-blue-800';
+      case 'COMPLETED': return 'bg-green-100 text-green-800';
+      case 'CANCELLED': return 'bg-red-100 text-red-800';
+      default: return 'bg-secondary-100 text-secondary-800';
     }
   }
 
   canJoinSession(session: Session): boolean {
     const now = new Date();
     const sessionTime = new Date(session.scheduledAt);
-    const timeDiff = Math.abs(now.getTime() - sessionTime.getTime()) / (1000 * 60); // minutes
-    
-    return session.status === 'SCHEDULED' && timeDiff <= 30; // Can join 30 minutes before/after
+    const timeDiff = Math.abs(now.getTime() - sessionTime.getTime()) / (1000 * 60);
+
+    return session.status === 'SCHEDULED' && timeDiff <= 30;
   }
 
   canCancelSession(session: Session): boolean {
-    return session.status === 'SCHEDULED';
+    if (session.status !== 'SCHEDULED') return false;
+    
+    if (this.currentUser?.role === 'STUDENT') {
+      if (session.attendees && session.attendees.length > 1) {
+        return false;
+      }
+    }
+    return true;
   }
 
   goBack(): void {

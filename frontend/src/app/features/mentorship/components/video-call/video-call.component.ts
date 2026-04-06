@@ -35,11 +35,11 @@ import AgoraRTC, {
         <div *ngIf="isRemoteConnected && !isRemoteVideoActive" class="waiting-state fade-in">
           <div class="waiting-avatar-container">
             <div class="waiting-avatar">
-              {{ (session?.mentor?.id === authService.getCurrentUser()?.id ? session?.student?.name?.charAt(0) : session?.mentor?.name?.charAt(0)) || '?' }}
+              {{ getOtherParticipantInitial() }}
             </div>
             <div class="pulse-ring ring-1" style="border-color: #10b981;"></div>
           </div>
-          <h2 class="waiting-text">{{ (session?.mentor?.id === authService.getCurrentUser()?.id ? session?.student?.name : session?.mentor?.name) || 'User' }}</h2>
+          <h2 class="waiting-text">{{ getOtherParticipantName() || 'User' }}</h2>
           <div class="audio-only-badge">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
             <span>Audio Only</span>
@@ -50,12 +50,12 @@ import AgoraRTC, {
         <div *ngIf="!isRemoteConnected" class="waiting-state fade-in">
           <div class="waiting-avatar-container">
             <div class="waiting-avatar">
-              {{ (session?.mentor?.id === authService.getCurrentUser()?.id ? session?.student?.name?.charAt(0) : session?.mentor?.name?.charAt(0)) || '?' }}
+              {{ getOtherParticipantInitial() }}
             </div>
             <div class="pulse-ring ring-1"></div>
             <div class="pulse-ring ring-2"></div>
           </div>
-          <h2 class="waiting-text">Waiting for {{ (session?.mentor?.id === authService.getCurrentUser()?.id ? session?.student?.name : session?.mentor?.name) || 'participant' }}...</h2>
+          <h2 class="waiting-text">Waiting for {{ getOtherParticipantName() || 'participant' }}...</h2>
           <p class="waiting-subtext">The session will begin automatically when they join.</p>
         </div>
       </div>
@@ -64,7 +64,7 @@ import AgoraRTC, {
       <div class="call-header slide-down">
         <div class="header-content glass-panel">
           <div class="participant-info">
-            <h1 class="font-medium">{{ session?.mentor?.name }} & {{ session?.student?.name }}</h1>
+            <h1 class="font-medium">{{ session?.mentor?.name }} & {{ getOtherParticipantName() }}</h1>
             <div class="status-badge">
               <span class="status-dot" [class.bg-green-500]="isRemoteConnected" [class.bg-yellow-500]="!isRemoteConnected"></span>
               {{ isRemoteConnected ? 'Connected' : 'Waiting' }}
@@ -453,7 +453,7 @@ import AgoraRTC, {
     }
 
     .glass-input:focus {
-      border-color: #6366f1;
+      border-color: #22c55e;
     }
 
     .send-btn {
@@ -498,7 +498,7 @@ import AgoraRTC, {
     .waiting-avatar {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #6366f1, #a855f7);
+      background: linear-gradient(135deg, #22c55e, #22c55e);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -623,6 +623,29 @@ export class VideoCallComponent implements OnInit, OnDestroy {
     private mentorshipService: MentorshipService,
     private webSocketService: WebSocketService
   ) {}
+
+  getOtherParticipantName(): string {
+    if (!this.session) return 'User';
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return 'User';
+    
+    // If we are the mentor, grab the first attendee's name (or "Group" if many)
+    if (this.session.mentor?.id === currentUser.id) {
+      if (this.session.attendees && this.session.attendees.length > 0) {
+        return this.session.attendees.length > 1 
+          ? `Group (${this.session.attendees.length} people)` 
+          : this.session.attendees[0].student?.name || 'Student';
+      }
+      return 'Student';
+    }
+    // If not mentor, show mentor's name
+    return this.session.mentor?.name || 'Mentor';
+  }
+
+  getOtherParticipantInitial(): string {
+    const name = this.getOtherParticipantName();
+    return name ? name.charAt(0) : '?';
+  }
 
   async ngOnInit(): Promise<void> {
     const sessionId = this.route.snapshot.paramMap.get('id');
@@ -859,4 +882,6 @@ export class VideoCallComponent implements OnInit, OnDestroy {
     this.webSocketService.disconnect();
   }
 }
+
+
 

@@ -1,0 +1,91 @@
+<div class="admin-container">
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="admin-content">
+    
+    <div class="back-btn" (click)="goBack()">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      <span>Back to Admin Panel</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">👥 User Management</h1>
+      <p class="page-subtitle">View, search, and manage all users on the platform</p>
+    </div>
+
+    <div class="info-card">
+      <div class="flex flex-col md:flex-row justify-between mb-6 gap-4">
+        <div class="flex gap-2">
+          <button (click)="setFilter('ALL')" [class.bg-green-500]="filterRole === 'ALL'" [class.text-white]="filterRole === 'ALL'" class="px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-700 transition">All Users</button>
+          <button (click)="setFilter('STUDENT')" [class.bg-green-500]="filterRole === 'STUDENT'" [class.text-white]="filterRole === 'STUDENT'" class="px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-700 transition">Students</button>
+          <button (click)="setFilter('MENTOR')" [class.bg-green-500]="filterRole === 'MENTOR'" [class.text-white]="filterRole === 'MENTOR'" class="px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-700 transition">Mentors</button>
+          <button (click)="setFilter('ADMIN')" [class.bg-green-500]="filterRole === 'ADMIN'" [class.text-white]="filterRole === 'ADMIN'" class="px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-700 transition">Admins</button>
+        </div>
+        <div>
+          <input type="text" placeholder="Search by name or email..." (input)="onSearch($event)" 
+                 class="px-4 py-2 w-full md:w-64 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-green-500">
+        </div>
+      </div>
+
+      <div *ngIf="isLoading" class="flex justify-center p-8">
+        <div class="spinner"></div>
+      </div>
+
+      <div *ngIf="!isLoading && filteredUsers.length > 0" class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-700">
+              <th class="p-3 text-gray-300">Name</th>
+              <th class="p-3 text-gray-300">Email</th>
+              <th class="p-3 text-gray-300">Role</th>
+              <th class="p-3 text-gray-300">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers" class="border-b border-gray-800 hover:bg-gray-800/50 transition-colors">
+              <td class="p-3 font-semibold">{{ user.name }}</td>
+              <td class="p-3 text-gray-400">{{ user.email }}</td>
+              <td class="p-3">
+                <span class="px-2 py-1 rounded text-xs font-bold"
+                      [ngClass]="{
+                          'bg-blue-500/20 text-blue-400': user.role === 'STUDENT',
+                          'bg-green-500/20 text-green-400': user.role === 'MENTOR',
+                          'bg-orange-500/20 text-orange-400': user.role === 'ADMIN'
+                      }">
+                    {{ user.role }}
+                </span>
+              </td>
+              <td class="p-3 flex gap-2">
+                <select #roleSelect class="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm text-white focus:outline-none">
+                  <option value="" disabled selected>Change Role</option>
+                  <option value="STUDENT" *ngIf="user.role !== 'STUDENT'">Make Student</option>
+                  <option value="MENTOR" *ngIf="user.role !== 'MENTOR'">Make Mentor</option>
+                  <option value="ADMIN" *ngIf="user.role !== 'ADMIN'">Make Admin</option>
+                </select>
+                <button (click)="updateRole(user.id, roleSelect.value)" [disabled]="!roleSelect.value"
+                        class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed transition">
+                  Update
+                </button>
+                <button (click)="deleteUser(user.id)" class="bg-red-500/20 hover:bg-red-500/40 text-red-500 px-3 py-1 rounded text-sm transition">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!isLoading && filteredUsers.length === 0" class="text-center p-8 text-gray-400">
+        No users match the criteria.
+      </div>
+    </div>
+  </div>
+</div>

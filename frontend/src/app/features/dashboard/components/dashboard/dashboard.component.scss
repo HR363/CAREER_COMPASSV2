@@ -14,8 +14,8 @@ $glass-border: theme.$glass-border;
 $glass-highlight: theme.$glass-highlight;
 
 // Accent colors (using unified theme)
-$accent-primary: theme.$accent-primary;     // Indigo
-$accent-secondary: theme.$accent-secondary; // Violet
+$accent-primary: theme.$accent-primary;     // green
+$accent-secondary: theme.$accent-secondary; // green
 $accent-teal: theme.$accent-teal;
 $accent-cyan: theme.$accent-cyan;
 $accent-green: theme.$accent-success;
@@ -23,7 +23,7 @@ $accent-lime: #84cc16;
 $accent-amber: theme.$accent-warning;
 $accent-sky: theme.$accent-sky;
 $accent-rose: theme.$accent-rose;
-$accent-violet: theme.$accent-secondary;
+$accent-green: theme.$accent-secondary;
 
 $text-primary: theme.$text-primary;
 $text-secondary: theme.$text-secondary;
@@ -274,7 +274,7 @@ $transition-spring: theme.$transition-spring;
       height: 22px;
     }
 
-    &.gradient-purple {
+    &.gradient-green {
       background: linear-gradient(135deg, rgba($accent-primary, 0.2), rgba($accent-primary, 0.05));
       color: $accent-primary;
       box-shadow: 0 0 20px rgba($accent-primary, 0.2);
@@ -304,7 +304,7 @@ $transition-spring: theme.$transition-spring;
       box-shadow: 0 0 20px rgba($accent-teal, 0.2);
     }
 
-    &.gradient-violet {
+    &.gradient-green {
       background: linear-gradient(135deg, rgba($accent-sky, 0.2), rgba($accent-sky, 0.05));
       color: $accent-sky;
       box-shadow: 0 0 20px rgba($accent-sky, 0.2);
@@ -992,3 +992,5 @@ $transition-spring: theme.$transition-spring;
     }
   }
 }
+
+

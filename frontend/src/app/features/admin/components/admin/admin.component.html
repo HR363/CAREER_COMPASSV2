@@ -105,6 +105,14 @@
             <p>Review student requests to become mentors on the platform</p>
           </div>
         </div>
+
+        <div class="feature-item" (click)="navigateToUsers()" style="cursor: pointer">
+          <span class="feature-icon">👤</span>
+          <div class="feature-info">
+            <h4>User Management</h4>
+            <p>Manage roles, edit users, and oversee accounts</p>
+          </div>
+        </div>
         
         <div class="feature-item">
           <span class="feature-icon">📅</span>
@@ -161,7 +169,7 @@
                       </td>
                       <td class="p-3">
                           <button *ngIf="session.status === 'IN_PROGRESS'" 
-                                  class="text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded transition shadow-lg shadow-purple-900/20 border border-purple-500"
+                                  class="text-xs bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded transition shadow-lg shadow-green-900/20 border border-green-500"
                                   (click)="ghostSession(session.id)">
                               <i class="fas fa-ghost mr-1"></i> Ghost Form
                           </button>
@@ -177,3 +185,4 @@
     </div>
   </div>
 </div>
+

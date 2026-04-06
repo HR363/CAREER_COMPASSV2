@@ -4,7 +4,7 @@
       
       <!-- Header -->
       <div class="bg-gray-800/50 p-6 border-b border-white/5 flex justify-between items-center">
-        <h2 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+        <h2 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-green-400">
           Apply to be a Mentor
         </h2>
         <button (click)="close()" class="text-gray-400 hover:text-white transition-colors">
@@ -31,7 +31,7 @@
           <div class="mb-5">
             <label class="block text-sm font-medium text-gray-300 mb-2">Why do you want to be a mentor?</label>
             <textarea formControlName="reason" rows="4"
-                      class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                      class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
                       placeholder="Share your experience and how you can help others..."></textarea>
             
             <div *ngIf="applicationForm.get('reason')?.touched && applicationForm.get('reason')?.errors?.['required']" 
@@ -47,7 +47,7 @@
           <div class="mb-6">
             <label class="block text-sm font-medium text-gray-300 mb-2">Resume / LinkedIn Profile Link <span class="text-gray-500 text-xs">(Optional)</span></label>
             <input type="text" formControlName="resumeUrl"
-                   class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                   class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
                    placeholder="https://linkedin.com/in/yourprofile">
           </div>
   
@@ -60,7 +60,7 @@
             </button>
             <button type="submit" 
                     [disabled]="applicationForm.invalid || isSubmitting"
-                    class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center">
+                    class="px-6 py-2.5 bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-all shadow-lg shadow-green-500/25 flex items-center">
               <div *ngIf="isSubmitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2"></div>
               Submit Application
             </button>
@@ -77,3 +77,4 @@
       </div>
     </div>
 </div>
+

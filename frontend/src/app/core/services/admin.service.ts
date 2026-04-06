@@ -19,6 +19,14 @@ export class AdminService {
     return this.http.get<any[]>(`${this.apiUrl}/users`);
   }
 
+  updateUserRole(userId: string, role: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/${userId}/role`, { role });
+  }
+
+  deleteUser(userId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/users/${userId}`);
+  }
+
   getAllSessions(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/sessions`);
   }

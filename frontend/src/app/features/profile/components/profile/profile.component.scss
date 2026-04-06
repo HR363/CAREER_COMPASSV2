@@ -96,10 +96,12 @@ $blur-amt: 24px;
 
 // Role Badge Gradients
 .badge-ADMIN { @apply bg-gradient-to-r from-red-500/20 to-orange-500/20 text-red-300 border-red-500/30; }
-.badge-MENTOR { @apply bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 border-purple-500/30; }
+.badge-MENTOR { @apply bg-gradient-to-r from-green-500/20 to-pink-500/20 text-green-300 border-green-500/30; }
 .badge-STUDENT { @apply bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 border-cyan-500/30; }
 
 // Timeline Connector Gradient
 .timeline-line {
-  background: linear-gradient(to bottom, #6366f1 0%, rgba(99, 102, 241, 0.2) 100%);
+  background: linear-gradient(to bottom, #22c55e 0%, rgba(99, 102, 241, 0.2) 100%);
 }
+
+

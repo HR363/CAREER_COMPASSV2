@@ -42,7 +42,7 @@ export class MentorProfileComponent implements OnInit, AfterViewChecked {
     });
     
     this.scheduleForm = this.fb.group({
-      scheduledAt: ['', Validators.required],
+      topic: ['', Validators.required],
       description: ['']
     });
   }
@@ -121,14 +121,13 @@ export class MentorProfileComponent implements OnInit, AfterViewChecked {
 
   scheduleSession(): void {
     if (!this.scheduleForm.valid || !this.mentor || !this.currentUser || this.isScheduling) return;
-    
+
     this.isScheduling = true;
     const formData = this.scheduleForm.value;
-    
-    this.mentorshipService.scheduleSession({
+
+    this.mentorshipService.requestSession({
       mentorId: this.mentor.id,
-      studentId: this.currentUser.id,
-      scheduledAt: formData.scheduledAt,
+      topic: formData.topic,
       description: formData.description
     }).subscribe({
       next: () => {
@@ -222,3 +221,4 @@ export class MentorProfileComponent implements OnInit, AfterViewChecked {
     this.scheduleForm.reset();
   }
 }
+

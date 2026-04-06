@@ -5,8 +5,8 @@ $border-subtle: rgba(255, 255, 255, 0.06);
 $text-primary: #ffffff;
 $text-secondary: #a1a1aa;
 $text-muted: #52525b;
-$accent-indigo: #6366f1;
-$accent-purple: #a855f7;
+$accent-green: #22c55e;
+$accent-green: #22c55e;
 $accent-pink: #ec4899;
 $accent-cyan: #22d3ee;
 $accent-emerald: #10b981;
@@ -37,7 +37,7 @@ $accent-emerald: #10b981;
     &.orb-1 {
       width: 400px;
       height: 400px;
-      background: rgba($accent-indigo, 0.2);
+      background: rgba($accent-green, 0.2);
       top: -10%;
       right: -10%;
     }
@@ -45,7 +45,7 @@ $accent-emerald: #10b981;
     &.orb-2 {
       width: 300px;
       height: 300px;
-      background: rgba($accent-purple, 0.15);
+      background: rgba($accent-green, 0.15);
       bottom: 10%;
       left: -5%;
     }
@@ -256,11 +256,11 @@ $accent-emerald: #10b981;
       animation: spin 1.2s linear infinite;
       
       &:first-child {
-        border-top-color: $accent-indigo;
+        border-top-color: $accent-green;
       }
       &:last-child {
         inset: 4px;
-        border-right-color: $accent-purple;
+        border-right-color: $accent-green;
         animation-direction: reverse;
       }
     }
@@ -298,7 +298,7 @@ $accent-emerald: #10b981;
       .wave-icon {
         width: 36px;
         height: 36px;
-        color: $accent-indigo;
+        color: $accent-green;
         position: relative;
         z-index: 1;
       }
@@ -306,7 +306,7 @@ $accent-emerald: #10b981;
       .wave-ring {
         position: absolute;
         inset: 0;
-        border: 1px solid rgba($accent-indigo, 0.3);
+        border: 1px solid rgba($accent-green, 0.3);
         border-radius: 50%;
         animation: wave 2s ease-out infinite;
         
@@ -381,7 +381,7 @@ $accent-emerald: #10b981;
     justify-content: flex-end;
     
     .message-bubble {
-      background: linear-gradient(135deg, $accent-indigo, darken($accent-indigo, 10%));
+      background: linear-gradient(135deg, $accent-green, darken($accent-green, 10%));
       color: $text-primary;
       border-radius: 20px 20px 6px 20px;
       
@@ -564,8 +564,8 @@ $accent-emerald: #10b981;
   transition: all 0.2s;
   
   &:focus-within {
-    border-color: rgba($accent-indigo, 0.5);
-    box-shadow: 0 0 0 3px rgba($accent-indigo, 0.1);
+    border-color: rgba($accent-green, 0.5);
+    box-shadow: 0 0 0 3px rgba($accent-green, 0.1);
   }
 }
 
@@ -614,8 +614,8 @@ $accent-emerald: #10b981;
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  background: rgba($accent-indigo, 0.2);
-  border: 1px solid rgba($accent-indigo, 0.3);
+  background: rgba($accent-green, 0.2);
+  border: 1px solid rgba($accent-green, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -626,20 +626,20 @@ $accent-emerald: #10b981;
   svg {
     width: 20px;
     height: 20px;
-    color: rgba($accent-indigo, 0.7);
+    color: rgba($accent-green, 0.7);
     transition: all 0.2s;
   }
   
   &.active {
-    background: linear-gradient(135deg, $accent-indigo, $accent-purple);
+    background: linear-gradient(135deg, $accent-green, $accent-green);
     border-color: transparent;
-    box-shadow: 0 4px 20px rgba($accent-indigo, 0.4);
+    box-shadow: 0 4px 20px rgba($accent-green, 0.4);
     
     svg { color: $text-primary; }
     
     &:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 25px rgba($accent-indigo, 0.5);
+      box-shadow: 0 6px 25px rgba($accent-green, 0.5);
     }
   }
   
@@ -673,3 +673,5 @@ $accent-emerald: #10b981;
     font-size: 0.65rem;
   }
 }
+
+

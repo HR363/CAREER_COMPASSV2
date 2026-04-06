@@ -39,6 +39,10 @@ export class AiService {
     return this.http.get<any[]>(`${environment.apiUrl}/ai/mentors`);
   }
 
+  groupPendingRequests(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/ai/group-requests`);
+  }
+
   chatWithAI(request: ChatRequest): Observable<any> {
     return this.http.post(`${environment.apiUrl}/ai/chat`, request);
   }

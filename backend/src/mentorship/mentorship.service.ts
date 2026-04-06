@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { PrismaService } from '../prisma/prisma.service';
 import { AgoraService } from '../agora/agora.service';
 import { ScheduleSessionDto } from './dto/schedule-session.dto';
+import { SessionRequestDto } from './dto/session-request.dto';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -68,10 +69,9 @@ export class MentorshipService {
     });
   }
 
-  // ==================== SESSIONS ====================
+  // ==================== REQUESTS ====================
 
-  async scheduleSession(dto: ScheduleSessionDto) {
-    // Verify mentor exists and is actually a mentor
+  async requestSession(studentId: string, dto: SessionRequestDto) {
     const mentor = await this.prisma.user.findUnique({
       where: { id: dto.mentorId, role: 'MENTOR' },
     });
@@ -80,42 +80,81 @@ export class MentorshipService {
       throw new NotFoundException('Mentor not found');
     }
 
-    // Verify student exists
-    const student = await this.prisma.user.findUnique({
-      where: { id: dto.studentId, role: 'STUDENT' },
+    return this.prisma.sessionRequest.create({
+      data: {
+        studentId,
+        mentorId: dto.mentorId,
+        topic: dto.topic,
+        description: dto.description,
+        status: 'PENDING',
+      },
+    });
+  }
+
+  async getRequests(userId: string, userRole: string) {
+    const where = userRole === 'MENTOR'
+      ? { mentorId: userId }
+      : { studentId: userId };
+
+    return this.prisma.sessionRequest.findMany({
+      where,
+      include: {
+        student: {
+          select: { id: true, name: true, email: true },
+        },
+        mentor: {
+          select: { id: true, name: true, email: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  // ==================== SESSIONS ====================
+
+  async scheduleSession(mentorId: string, dto: ScheduleSessionDto) {
+    const requests = await this.prisma.sessionRequest.findMany({
+      where: {
+        id: { in: dto.requestIds },
+        mentorId: mentorId,
+        status: 'PENDING',
+      },
     });
 
-    if (!student) {
-      throw new NotFoundException('Student not found');
+    if (requests.length === 0) {
+      throw new NotFoundException('No valid pending requests found for this mentor');
     }
+
+    const studentIds = requests.map(r => r.studentId);
 
     // Generate unique room ID for WebRTC
     const roomId = `room_${uuidv4()}`;
 
-    return this.prisma.session.create({
-      data: {
-        mentorId: dto.mentorId,
-        studentId: dto.studentId,
-        scheduledAt: new Date(dto.scheduledAt),
-        status: 'SCHEDULED',
-        roomId,
-      },
-      include: {
-        mentor: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+    // Create session, attach attendees and update requests in a transaction
+    return this.prisma.$transaction(async (tx) => {
+      const session = await tx.session.create({
+        data: {
+          mentorId,
+          topic: dto.topic || requests[0].topic,
+          scheduledAt: new Date(dto.scheduledAt),
+          status: 'SCHEDULED',
+          roomId,
+          attendees: {
+            connect: studentIds.map(id => ({ id })),
           },
         },
-        student: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+        include: {
+          mentor: { select: { id: true, name: true, email: true } },
+          attendees: { select: { id: true, name: true, email: true } },
         },
-      },
+      });
+
+      await tx.sessionRequest.updateMany({
+        where: { id: { in: dto.requestIds } },
+        data: { status: 'ACCEPTED', sessionId: session.id },
+      });
+
+      return session;
     });
   }
 
@@ -123,7 +162,7 @@ export class MentorshipService {
     const where = userRole === 'MENTOR' 
       ? { mentorId: userId }
       : userRole === 'STUDENT'
-      ? { studentId: userId }
+      ? { attendees: { some: { id: userId } } }
       : {};
 
     return this.prisma.session.findMany({
@@ -142,7 +181,7 @@ export class MentorshipService {
             },
           },
         },
-        student: {
+        attendees: {
           select: {
             id: true,
             name: true,
@@ -162,7 +201,7 @@ export class MentorshipService {
     });
   }
 
-  async getSession(sessionId: string, userId: string, userRole: string) {
+  async getSession(sessionId: string, userId: string, userRole: string) {       
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
       include: {
@@ -174,7 +213,7 @@ export class MentorshipService {
             profile: true,
           },
         },
-        student: {
+        attendees: {
           select: {
             id: true,
             name: true,
@@ -190,7 +229,8 @@ export class MentorshipService {
     }
 
     // Check if user has access to this session
-    if (userRole !== 'ADMIN' && session.mentorId !== userId && session.studentId !== userId) {
+    const isAttendee = session.attendees.some(s => s.id === userId);
+    if (userRole !== 'ADMIN' && session.mentorId !== userId && !isAttendee) {
       throw new ForbiddenException('Access denied to this session');
     }
 
@@ -223,6 +263,10 @@ export class MentorshipService {
   async cancelSession(sessionId: string, userId: string, userRole: string) {
     const session = await this.getSession(sessionId, userId, userRole);
 
+    if (userRole === 'STUDENT' && session.attendees && session.attendees.length > 1) {
+      throw new ForbiddenException('Students cannot cancel group sessions. Only the mentor can cancel a scheduled group session.');
+    }
+
     return this.prisma.session.update({
       where: { id: sessionId },
       data: {
@@ -234,6 +278,7 @@ export class MentorshipService {
   async getVideoCallToken(sessionId: string, userId: string) {
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
+      include: { attendees: { select: { id: true } } }
     });
 
     if (!session) {
@@ -241,7 +286,8 @@ export class MentorshipService {
     }
 
     // Verify user is part of this session
-    if (session.mentorId !== userId && session.studentId !== userId) {
+    const isAttendee = session.attendees.some(a => a.id === userId);
+    if (session.mentorId !== userId && !isAttendee) {
       throw new ForbiddenException('You are not authorized to join this session');
     }
 
@@ -269,3 +315,6 @@ export class MentorshipService {
     };
   }
 }
+
+
+

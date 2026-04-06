@@ -1,16 +1,15 @@
-import { IsString, IsDateString, IsOptional } from 'class-validator';
+import { IsString, IsDateString, IsOptional, IsArray, ArrayMinSize } from 'class-validator';
 
 export class ScheduleSessionDto {
-  @IsString()
-  mentorId: string;
-
-  @IsString()
-  studentId: string;
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
+  requestIds: string[];
 
   @IsDateString()
   scheduledAt: string;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  topic?: string;
 }

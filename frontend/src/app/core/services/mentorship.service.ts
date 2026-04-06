@@ -4,21 +4,33 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface ScheduleSessionRequest {
-  mentorId: string;
-  studentId: string;
+  requestIds: string[];
   scheduledAt: string;
+  topic?: string;
+}
+
+export interface SessionRequest {
+  id: string;
+  studentId: string;
+  mentorId: string;
+  sessionId?: string;
+  topic: string;
   description?: string;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  createdAt: string;
+  student?: any;
+  mentor?: any;
 }
 
 export interface Session {
   id: string;
   mentorId: string;
-  studentId: string;
+  topic?: string;
   scheduledAt: string;
   status: 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
   roomId: string;
   mentor?: any;
-  student?: any;
+  attendees?: any[];
 }
 
 export interface Mentor {
@@ -48,6 +60,14 @@ export interface Resource {
 })
 export class MentorshipService {
   constructor(private http: HttpClient) {}
+
+  requestSession(request: { mentorId: string; topic: string; description?: string }): Observable<SessionRequest> {
+    return this.http.post<SessionRequest>(`${environment.apiUrl}/mentorship/requests`, request);
+  }
+
+  getRequests(): Observable<SessionRequest[]> {
+    return this.http.get<SessionRequest[]>(`${environment.apiUrl}/mentorship/requests`);
+  }
 
   scheduleSession(request: ScheduleSessionRequest): Observable<Session> {
     return this.http.post<Session>(`${environment.apiUrl}/mentorship/schedule`, request);

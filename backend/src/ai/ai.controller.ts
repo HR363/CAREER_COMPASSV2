@@ -31,6 +31,11 @@ export class AiController {
     return this.aiService.getMentorRecommendations(user.id);
   }
 
+  @Get('group-requests')
+  async groupPendingRequests(@CurrentUser() user: any) {
+    return this.aiService.groupPendingRequests(user.id);
+  }
+
   @Post('chat')
   async chatWithAI(
     @Body() body: { message: string; context?: any },

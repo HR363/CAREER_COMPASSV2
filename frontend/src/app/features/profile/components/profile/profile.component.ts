@@ -64,8 +64,8 @@ export class ProfileComponent implements OnInit {
     datasets: [{
       data: [],
       backgroundColor: [
-        'rgba(99, 102, 241, 0.8)', // Indigo
-        'rgba(139, 92, 246, 0.8)', // Violet
+        'rgba(99, 102, 241, 0.8)', // green
+        'rgba(139, 92, 246, 0.8)', // green
         'rgba(236, 72, 153, 0.8)', // Pink
         'rgba(34, 197, 94, 0.8)',  // Green
         'rgba(234, 179, 8, 0.8)',  // Yellow
@@ -285,7 +285,7 @@ export class ProfileComponent implements OnInit {
       case 'ADMIN':
         return 'bg-red-100 text-red-800';
       case 'MENTOR':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-green-100 text-green-800';
       case 'STUDENT':
         return 'bg-blue-100 text-blue-800';
       default:
@@ -426,6 +426,12 @@ export class ProfileComponent implements OnInit {
     return this.mentorSessions.filter(s => s.status === 'SCHEDULED');
   }
 
+  getSessionTitle(session: any): string {
+     if (session.topic) return session.topic;
+     if (!session.attendees || session.attendees.length === 0) return 'Session';
+     return session.attendees.length > 1 ? `Group Session (${session.attendees.length})` : `Session with ${session.attendees[0].student?.name || 'Student'}`;
+  }
+
   getCompletedSessions(): Session[] {
     return this.mentorSessions.filter(s => s.status === 'COMPLETED');
   }
@@ -474,4 +480,6 @@ export class ProfileComponent implements OnInit {
     return num;
   }
 }
+
+
 
