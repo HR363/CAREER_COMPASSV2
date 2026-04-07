@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgoraService } from '../agora/agora.service';
+import { MailerService } from '../mailer/mailer.service';
 
 @Injectable()
 export class AdminService {
-  constructor(private prisma: PrismaService, private agoraService: AgoraService) {}
+  constructor(
+    private prisma: PrismaService,
+    private agoraService: AgoraService,
+    private mailerService: MailerService,
+  ) {}
 
   async getDashboardStats() {
     const [
@@ -71,10 +76,23 @@ export class AdminService {
       data: { status }
     });
 
+    const user = await this.prisma.user.findUnique({
+      where: { id: application.userId },
+      select: { name: true, email: true },
+    });
+
     if (status === 'APPROVED') {
       await this.prisma.user.update({
         where: { id: application.userId },
         data: { role: 'MENTOR' }
+      });
+    }
+
+    if (user?.email) {
+      await this.mailerService.sendMentorApplicationReviewedEmail({
+        to: user.email,
+        recipientName: user.name,
+        status,
       });
     }
 

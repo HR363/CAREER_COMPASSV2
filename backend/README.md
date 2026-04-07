@@ -61,6 +61,13 @@ DATABASE_URL="mssql://localhost:1433/CareerCompass?user=sa&password=YourPassword
 JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
 JWT_EXPIRES_IN="7d"
 GEMINI_API_KEY="your-gemini-api-key-here"
+MAIL_HOST="smtp.gmail.com"
+MAIL_PORT=587
+MAIL_SECURE=false
+MAIL_SERVICE="gmail"
+MAIL_USER="your-smtp-username"
+MAIL_PASS="your-smtp-password-or-app-password"
+MAIL_FROM="no-reply@careercompass.com"
 PORT=3000
 NODE_ENV=development
 CORS_ORIGIN="http://localhost:4200"
@@ -125,6 +132,10 @@ Google Gemini API integration for:
 - Career recommendations based on user profile
 - Learning path generation
 - Real-time chat assistance
+
+Email notifications via Nodemailer:
+- Session reminder emails sent automatically 30 minutes before session start
+- Mentor application review emails (approved/rejected)
 
 ## 📡 WebRTC Signaling
 

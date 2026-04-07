@@ -131,7 +131,7 @@ export class MentorshipService {
     const roomId = `room_${uuidv4()}`;
 
     // Create session, attach attendees and update requests in a transaction
-    return this.prisma.$transaction(async (tx) => {
+    const session = await this.prisma.$transaction(async (tx) => {
       const session = await tx.session.create({
         data: {
           mentorId,
@@ -156,6 +156,8 @@ export class MentorshipService {
 
       return session;
     });
+
+    return session;
   }
 
   async getSessions(userId: string, userRole: string) {

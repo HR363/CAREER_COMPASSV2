@@ -9,13 +9,17 @@ import { MentorshipModule } from './mentorship/mentorship.module';
 import { AdminModule } from './admin/admin.module';
 import { AgoraModule } from './agora/agora.module';
 import { MessagesModule } from './messages/messages.module';
+import { MailerModule } from './mailer/mailer.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
+    MailerModule,
     AgoraModule,
     AuthModule,
     UsersModule,

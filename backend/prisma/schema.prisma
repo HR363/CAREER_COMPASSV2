@@ -103,6 +103,7 @@ model Session {
   mentorId    String
   topic       String?
   scheduledAt DateTime
+  reminderSentAt DateTime?
   status      String   @default("SCHEDULED")
   roomId      String   @unique
   createdAt   DateTime @default(now())

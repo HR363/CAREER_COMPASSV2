@@ -10,10 +10,11 @@ import { Socket } from 'socket.io';
 import { UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
+import { getAllowedOrigins } from '../common/constants';
 
 @WebSocketGateway({
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
+    origin: getAllowedOrigins(),
     credentials: true,
   },
 })
